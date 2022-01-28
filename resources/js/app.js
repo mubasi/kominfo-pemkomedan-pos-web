@@ -24,17 +24,18 @@ Vue.use(VueSweetalert2);
 Vue.use(BootstrapVue)
 
 router.beforeEach(async function (to, from, next) {
-  document.title = to.meta.title + " | SMK MUSDA";
+  document.title = to.meta.title + " | BKDPSDM KOTA MEDAN";
   if (to.meta.auth) {
       await axios
           .get("/api/authentication")
           .then((response) => {
-              let data = response.data;
-              if (data.status) {
-                  next();
-              } else {
-                  return next("/pages/login");
-              }
+              next();
+            //   let data = response.data;
+            //   if (data.status) {
+            //       next();
+            //   } else {
+            //       return next("/pages/login");
+            //   }
           })
           .catch(() => {
               return next("/pages/login");

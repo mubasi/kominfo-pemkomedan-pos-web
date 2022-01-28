@@ -1,266 +1,343 @@
-import Vue from "vue";
-import Router from "vue-router";
+import Vue from 'vue'
+import Router from 'vue-router'
 
 // Containers
-const DefaultContainer = () => import("@/containers/DefaultContainer.vue");
-
-// Views - Pages
-const Page404 = () => import("@/views/pages/Page404");
+const DefaultContainer = () => import('@/containers/DefaultContainer.vue')
 
 // Views
-//homepage
-const HomePage = () => import("@/views/pages/home/Index.vue");
+const Dashboard = () => import('@/views/Dashboard.vue')
 
-//agama
-const Agama = () => import("@/views/pages/agama/Index.vue");
-const AgamaEntry = () => import("@/views/pages/agama/Entry.vue");
-//bank
-const Bank = () => import("@/views/pages/bank/Index.vue");
-const BankEntry = () => import("@/views/pages/bank/Entry.vue");
-//jabatan
-const Jenisptk = () => import("@/views/pages/jenisptk/Index.vue");
-const JenisptkEntry = () => import("@/views/pages/jenisptk/Entry.vue");
+const Colors = () => import('@/views/theme/Colors')
+const Typography = () => import('@/views/theme/Typography')
 
-//lembaga pengangkatan
-const Lembagapengangkatan = () => import("@/views/pages/lembagapengangkatan/Index.vue");
-const LembagapengangkatanEntry = () => import("@/views/pages/lembagapengangkatan/Entry.vue");
+const Charts = () => import('@/views/Charts')
+const Widgets = () => import('@/views/Widgets')
 
-//pangkat golongan
-const Pangkatgolongan = () => import("@/views/pages/pangkatgolongan/Index.vue");
-const PangkatgolonganEntry = () => import("@/views/pages/pangkatgolongan/Entry.vue");
+// Views - Components
+const Cards = () => import('@/views/base/Cards')
+const Forms = () => import('@/views/base/Forms')
+const Switches = () => import('@/views/base/Switches')
+const Tables = () => import('@/views/base/Tables')
+const Tabs = () => import('@/views/base/Tabs')
+const Breadcrumbs = () => import('@/views/base/Breadcrumbs')
+const Carousels = () => import('@/views/base/Carousels')
+const Collapses = () => import('@/views/base/Collapses')
+const Jumbotrons = () => import('@/views/base/Jumbotrons')
+const ListGroups = () => import('@/views/base/ListGroups')
+const Navs = () => import('@/views/base/Navs')
+const Navbars = () => import('@/views/base/Navbars')
+const Paginations = () => import('@/views/base/Paginations')
+const Popovers = () => import('@/views/base/Popovers')
+const ProgressBars = () => import('@/views/base/ProgressBars')
+const Tooltips = () => import('@/views/base/Tooltips')
 
-//status pegawai
-const Statuspegawai = () => import("@/views/pages/statuspegawai/Index.vue");
-const StatuspegawaiEntry = () => import("@/views/pages/statuspegawai/Entry.vue");
+// Views - Buttons
+const StandardButtons = () => import('@/views/buttons/StandardButtons')
+const ButtonGroups = () => import('@/views/buttons/ButtonGroups')
+const Dropdowns = () => import('@/views/buttons/Dropdowns')
+const BrandButtons = () => import('@/views/buttons/BrandButtons')
 
-//Sumber Gaji
-const SumberGaji = () => import("@/views/pages/sumbergaji/Index.vue");
-const SumberGajiEntry = () => import("@/views/pages/sumbergaji/Entry.vue");
+// Views - Icons
+const Flags = () => import('@/views/icons/Flags')
+const FontAwesome = () => import('@/views/icons/FontAwesome')
+const SimpleLineIcons = () => import('@/views/icons/SimpleLineIcons')
+const CoreUIIcons = () => import('@/views/icons/CoreUIIcons')
 
-//Tugas Tambahan
-const TugasTambahan = () => import("@/views/pages/tugastambahan/Index.vue");
-const TugasTambahanEntry = () => import("@/views/pages/tugastambahan/Entry.vue");
+// Views - Notifications
+const Alerts = () => import('@/views/notifications/Alerts')
+const Badges = () => import('@/views/notifications/Badges')
+const Modals = () => import('@/views/notifications/Modals')
 
-//login
-const Login = () => import("@/views/pages/Login.vue");
+// Views - Pages
+const Page404 = () => import('@/views/pages/Page404')
+const Page500 = () => import('@/views/pages/Page500')
+const Login = () => import('@/views/pages/Login')
+const Register = () => import('@/views/pages/Register')
 
-//pages template
-const SimpleLineIcons = () => import("@/views/icons/SimpleLineIcons");
+// Users
+const Users = () => import('@/views/users/Users')
+const User = () => import('@/views/users/User')
 
-Vue.use(Router);
+Vue.use(Router)
 
 export default new Router({
-    mode: "history", // https://router.vuejs.org/api/#mode
-    linkActiveClass: "open active",
-    scrollBehavior: () => ({ y: 0 }),
-    routes: [
+  mode: 'history', // https://router.vuejs.org/api/#mode
+  linkActiveClass: 'open active',
+  scrollBehavior: () => ({ y: 0 }),
+  routes: [
+    {
+      path: '/',
+      redirect: '/pages/login',
+      name: 'Home',
+      component: DefaultContainer,
+      children: [
         {
-            path: "*",
-            redirect: "/pages/404",
+          path: 'dashboard',
+          name: 'Dashboard',
+          meta: {
+              title: "Dashboard",
+              auth: true,
+          },
+          component: Dashboard
         },
         {
-            path: "/",
-            name: "HomePage",
-            meta: {
-                title: "Home",
+          path: 'theme',
+          redirect: '/theme/colors',
+          name: 'Theme',
+          component: {
+            render (c) { return c('router-view') }
+          },
+          children: [
+            {
+              path: 'colors',
+              name: 'Colors',
+              component: Colors
             },
-            component: HomePage,
+            {
+              path: 'typography',
+              name: 'Typography',
+              component: Typography
+            }
+          ]
         },
         {
-            path: "/panel/",
-            redirect: "/panel/icon",
-            name: "BaseAdmin",
-            component: DefaultContainer,
-            children: [
-                {
-                    path: "main-data/agama",
-                    name: "agama",
-                    component: Agama,
-                    meta: {
-                        title: "Agama",
-                        auth: true,
-                    },
-                },
-                {
-                    path: "main-data/agama/:act",
-                    name: "entry-agama",
-                    component: AgamaEntry,
-                    meta: {
-                        title: "Entry Data Agama",
-                        auth: true,
-                    },
-                },
-                {
-                    path: "main-data/bank",
-                    name: "bank",
-                    component: Bank,
-                    meta: {
-                        title: "Bank",
-                        auth: true,
-                    },
-                },
-                {
-                    path: "main-data/bank/:act",
-                    name: "entry-bank",
-                    component: BankEntry,
-                    meta: {
-                        title: "Entry Data Bank",
-                        auth: true,
-                    },
-                },
-                {
-                    path: "main-data/jenis-ptk",
-                    name: "jenisptk",
-                    component: Jenisptk,
-                    meta: {
-                        title: "Jenis PTK",
-                        auth: true,
-                    },
-                },
-                {
-                    path: "main-data/jenis-ptk/:act",
-                    name: "entry-jenis-ptk",
-                    component: JenisptkEntry,
-                    meta: {
-                        title: "Entry Data Jenis PTK",
-                        auth: true,
-                    },
-                },
-                {
-                    path: "main-data/lembaga-pengangkatan",
-                    name: "lembagapengangkatan",
-                    component: Lembagapengangkatan,
-                    meta: {
-                        title: "Lembaga Pengangkatan",
-                        auth: true,
-                    },
-                },
-                {
-                    path: "main-data/lembaga-pengangkatan/:act",
-                    name: "entry-lembagapengangkatan",
-                    component: LembagapengangkatanEntry,
-                    meta: {
-                        title: "Entry Data Lembaga Pengangkatan",
-                        auth: true,
-                    },
-                },
-                {
-                    path: "main-data/pangkat-golongan",
-                    name: "pangkatgolongan",
-                    component: Pangkatgolongan,
-                    meta: {
-                        title: "Pangkat/Golongan",
-                        auth: true,
-                    },
-                },
-                {
-                    path: "main-data/pangkat-golongan/:act",
-                    name: "entry-pangkat-golongan",
-                    component: PangkatgolonganEntry,
-                    meta: {
-                        title: "Entry Data Pangkat/Golongan",
-                        auth: true,
-                    },
-                },
-                {
-                    path: "main-data/status-pegawai",
-                    name: "statuspegawai",
-                    component: Statuspegawai,
-                    meta: {
-                        title: "Status Pegawai",
-                        auth: true,
-                    },
-                },
-                {
-                    path: "main-data/status-pegawai/:act",
-                    name: "entry-statuspegawai",
-                    component: StatuspegawaiEntry,
-                    meta: {
-                        title: "Entry Data Status Pegawai",
-                        auth: true,
-                    },
-                },
-                {
-                    path: "main-data/sumber-gaji",
-                    name: "sumbergaji",
-                    component: SumberGaji,
-                    meta: {
-                        title: "Sumber Gaji",
-                        auth: true,
-                    },
-                },
-                {
-                    path: "main-data/sumber-gaji/:act",
-                    name: "entry-sumbergaji",
-                    component: SumberGajiEntry,
-                    meta: {
-                        title: "Entry Data Sumber Gaji",
-                        auth: true,
-                    },
-                },
-                {
-                    path: "main-data/tugas-tambahan",
-                    name: "tugastambahan",
-                    component: TugasTambahan,
-                    meta: {
-                        title: "Tugas Tambahan",
-                        auth: true,
-                    },
-                },
-                {
-                    path: "main-data/tugas-tambahan/:act",
-                    name: "entry-tugastambahan",
-                    component: TugasTambahanEntry,
-                    meta: {
-                        title: "Entry Data Tugas Tambahan",
-                        auth: true,
-                    },
-                },
-                {
-                    path: "icon",
-                    name: "Icon",
-                    component: SimpleLineIcons,
-                    meta: {
-                        title: "Icon",
-                        auth: true,
-                    },
-                },
-            ],
+          path: 'charts',
+          name: 'Charts',
+          component: Charts
         },
         {
-            path: "/pages",
-            redirect: "/pages/404",
-            name: "Pages",
-            component: {
-                render(c) {
-                    return c("router-view");
-                },
+          path: 'widgets',
+          name: 'Widgets',
+          component: Widgets
+        },
+        {
+          path: 'users',
+          meta: { label: 'Users'},
+          component: {
+            render (c) { return c('router-view') }
+          },
+          children: [
+            {
+              path: '',
+              component: Users,
             },
-            children: [
-                {
-                    path: "404",
-                    name: "Page404",
-                    component: Page404,
-                },
-                // {
-                //   path: '500',
-                //   name: 'Page500',
-                //   component: Page500
-                // },
-                {
-                    path: "login",
-                    name: "Login",
-                    meta: {
-                        title: "Login",
-                    },
-                    component: Login,
-                },
-                // {
-                //   path: 'register',
-                //   name: 'Register',
-                //   component: Register
-                // }
-            ],
+            {
+              path: ':id',
+              meta: { label: 'User Details'},
+              name: 'User',
+              component: User,
+            },
+          ]
         },
-    ],
-});
+        {
+          path: 'base',
+          redirect: '/base/cards',
+          name: 'Base',
+          component: {
+            render (c) { return c('router-view') }
+          },
+          children: [
+            {
+              path: 'cards',
+              name: 'Cards',
+              component: Cards
+            },
+            {
+              path: 'forms',
+              name: 'Forms',
+              component: Forms
+            },
+            {
+              path: 'switches',
+              name: 'Switches',
+              component: Switches
+            },
+            {
+              path: 'tables',
+              name: 'Tables',
+              component: Tables
+            },
+            {
+              path: 'tabs',
+              name: 'Tabs',
+              component: Tabs
+            },
+            {
+              path: 'breadcrumbs',
+              name: 'Breadcrumbs',
+              component: Breadcrumbs
+            },
+            {
+              path: 'carousels',
+              name: 'Carousels',
+              component: Carousels
+            },
+            {
+              path: 'collapses',
+              name: 'Collapses',
+              component: Collapses
+            },
+            {
+              path: 'jumbotrons',
+              name: 'Jumbotrons',
+              component: Jumbotrons
+            },
+            {
+              path: 'list-groups',
+              name: 'List Groups',
+              component: ListGroups
+            },
+            {
+              path: 'navs',
+              name: 'Navs',
+              component: Navs
+            },
+            {
+              path: 'navbars',
+              name: 'Navbars',
+              component: Navbars
+            },
+            {
+              path: 'paginations',
+              name: 'Paginations',
+              component: Paginations
+            },
+            {
+              path: 'popovers',
+              name: 'Popovers',
+              component: Popovers
+            },
+            {
+              path: 'progress-bars',
+              name: 'Progress Bars',
+              component: ProgressBars
+            },
+            {
+              path: 'tooltips',
+              name: 'Tooltips',
+              component: Tooltips
+            }
+          ]
+        },
+        {
+          path: 'buttons',
+          redirect: '/buttons/standard-buttons',
+          name: 'Buttons',
+          component: {
+            render (c) { return c('router-view') }
+          },
+          children: [
+            {
+              path: 'standard-buttons',
+              name: 'Standard Buttons',
+              component: StandardButtons
+            },
+            {
+              path: 'button-groups',
+              name: 'Button Groups',
+              component: ButtonGroups
+            },
+            {
+              path: 'dropdowns',
+              name: 'Dropdowns',
+              component: Dropdowns
+            },
+            {
+              path: 'brand-buttons',
+              name: 'Brand Buttons',
+              component: BrandButtons
+            }
+          ]
+        },
+        {
+          path: 'icons',
+          redirect: '/icons/font-awesome',
+          name: 'Icons',
+          component: {
+            render (c) { return c('router-view') }
+          },
+          children: [
+            {
+              path: 'coreui-icons',
+              name: 'CoreUI Icons',
+              component: CoreUIIcons
+            },
+            {
+              path: 'flags',
+              name: 'Flags',
+              component: Flags
+            },
+            {
+              path: 'font-awesome',
+              name: 'Font Awesome',
+              component: FontAwesome
+            },
+            {
+              path: 'simple-line-icons',
+              name: 'Simple Line Icons',
+              component: SimpleLineIcons
+            }
+          ]
+        },
+        {
+          path: 'notifications',
+          redirect: '/notifications/alerts',
+          name: 'Notifications',
+          component: {
+            render (c) { return c('router-view') }
+          },
+          children: [
+            {
+              path: 'alerts',
+              name: 'Alerts',
+              component: Alerts
+            },
+            {
+              path: 'badges',
+              name: 'Badges',
+              component: Badges
+            },
+            {
+              path: 'modals',
+              name: 'Modals',
+              component: Modals
+            }
+          ]
+        }
+      ]
+    },
+    {
+      path: '/pages',
+      redirect: '/pages/404',
+      name: 'Pages',
+      component: {
+        render (c) { return c('router-view') }
+      },
+      children: [
+        {
+          path: '404',
+          name: 'Page404',
+          component: Page404
+        },
+        {
+          path: '500',
+          name: 'Page500',
+          component: Page500
+        },
+        {
+          path: 'login',
+          name: 'Login',
+          component: Login,
+          meta: {
+            title : "Login"
+          }
+        },
+        {
+          path: 'register',
+          name: 'Register',
+          component: Register
+        }
+      ]
+    }
+  ]
+})

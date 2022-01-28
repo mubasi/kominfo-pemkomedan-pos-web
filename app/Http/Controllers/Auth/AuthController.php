@@ -28,7 +28,6 @@ class AuthController extends Controller
                     $user_id = Auth::user()->id;
 
                     $rowUser = User::where('id', $user_id)
-                        ->with('hashRole')
                         ->first();
 
                     // Status Error ...
