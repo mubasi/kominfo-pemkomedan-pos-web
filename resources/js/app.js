@@ -9,7 +9,7 @@ import 'core-js/es7/array'
 import Vue from 'vue'
 import BootstrapVue from 'bootstrap-vue'
 import App from './App.vue'
-import router from './router'
+import router from './router/index.js'
 
 
 import VueSweetalert2 from "vue-sweetalert2";
@@ -24,7 +24,7 @@ Vue.use(VueSweetalert2);
 Vue.use(BootstrapVue)
 
 router.beforeEach(async function (to, from, next) {
-  document.title = to.meta.title + " | BKDPSDM KOTA MEDAN";
+  document.title = to.meta.title + " | Kasir App";
   if (to.meta.auth) {
       await axios
           .get("/api/authentication")

@@ -66,15 +66,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'Login',
   data: function data() {
@@ -98,17 +89,14 @@ __webpack_require__.r(__webpack_exports__);
       self.textLogin = '<i class="fa fa-spinner fa-spin"></i>'; // window.axios.defaults.headers.common['X-CSRF-TOKEN'] = self.csrf;
 
       axios.post('/api/login', self.form).then(function (response) {
-        var data = response.data.status.data; // console.log(data.hash_role[0].name);
-        // if (data.hash_role[0].name == 'Customer Service') {
-        //   self.$router.push('/customer-service');
-        // } else if (data.hash_role[0].name == 'Tiket') {
-        //   self.$router.push('/tiket');
-        // } else if (data.hash_role[0].name == 'Antrian') {
-        //   self.$router.push('/antrian');
-        // } else {
+        var data = response.data.status.data;
 
-        self.$router.push('/dashboard'); // }
-        // window.location.href = '/dashboard';
+        if (data.roles[0].name == 'Kasir') {
+          self.$router.push('/panel/transaksi');
+        } else {
+          self.$router.push('/panel/dashboard');
+        } // window.location.href = '/dashboard';
+
       }, function (error) {
         // console.log(error.response);
         if (error.response.status == 403) {
@@ -121,13 +109,18 @@ __webpack_require__.r(__webpack_exports__);
           // this.message = error.response.data.message;
           self.textLogin = "Masuk";
           self.errors = error.response.data.errors;
-        } else if (error.response.status == 404) {} else if (error.response.status === 401) {
+        } else if (error.response.status == 404) {
+          _this.$swal({
+            title: "Warning",
+            text: "Silahkan coba lagi!",
+            icon: "warning"
+          });
+        } else if (error.response.status === 401) {
           self.textLogin = "Masuk";
           self.errors = error.response.data.status;
           console.log(self.errors);
         } else {
-          self.textLogin = "Masuk";
-          console.error(error);
+          self.textLogin = "Masuk"; // console.error(error);
 
           _this.$swal({
             title: "Warning",
@@ -259,7 +252,7 @@ var render = function () {
                                   [
                                     _c("b-img", {
                                       attrs: {
-                                        src: "/images/logo-pemko-medan.png",
+                                        src: "/images/logo.png",
                                         width: "80",
                                         fluid: "",
                                       },
@@ -318,7 +311,7 @@ var render = function () {
                                       staticClass: "form-control",
                                       attrs: {
                                         type: "email",
-                                        placeholder: "Username",
+                                        placeholder: "Email",
                                         autocomplete: "username email",
                                       },
                                       model: {
@@ -444,11 +437,7 @@ var render = function () {
                                         _c(
                                           "small",
                                           { staticClass: "text-center" },
-                                          [
-                                            _vm._v(
-                                              "BADAN KEPEGAWAIAN DAERAH DAN PENGEMBANGAN SDM KOTA MEDAN"
-                                            ),
-                                          ]
+                                          [_vm._v("KASIR APP")]
                                         ),
                                       ]
                                     ),

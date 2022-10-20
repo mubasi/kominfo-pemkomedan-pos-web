@@ -24,6 +24,7 @@ class UserSeeder extends Seeder
                 'email_verified_at' => Carbon::now(),
                 'password' => Hash::make('12345678'),
                 'created_at' => Carbon::now(),
+                'active' => 'Y'
             ],
             [
                 'email' => 'admin@gmail.com',
@@ -31,6 +32,7 @@ class UserSeeder extends Seeder
                 'email_verified_at' => Carbon::now(),
                 'password' => Hash::make('admin123'),
                 'created_at' => Carbon::now(),
+                'active' => 'Y'
             ],
             [
                 'email' => 'kasir1@gmail.com',
@@ -38,6 +40,7 @@ class UserSeeder extends Seeder
                 'email_verified_at' => Carbon::now(),
                 'password' => Hash::make('12345678'),
                 'created_at' => Carbon::now(),
+                'active' => 'Y'
             ],
         ];
         foreach ($dataUser as $key => $value) {

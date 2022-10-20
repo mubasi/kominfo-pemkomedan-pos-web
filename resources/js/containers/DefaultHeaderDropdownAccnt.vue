@@ -38,7 +38,6 @@ export default {
     },
     logout() {
       axios.get('/api/logout').then((e) => {
-        console.log(e);
         this.$router.push('/pages/login');
       });
     }

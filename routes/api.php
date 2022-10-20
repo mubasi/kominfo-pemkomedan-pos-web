@@ -22,15 +22,18 @@ Route::middleware('auth:sanctum')->get('/authentication', function (Request $req
 
 Route::post('login', [AuthController::class, 'index']);
 
-Route::middleware('auth:sanctum')->group(
+Route::group(
     [
         'namescape' => 'API',
+        'middleware' => 'auth:sanctum',
     ],
     function () {
         /**
          * profile
          */
         Route::get('/profile', [AuthController::class, 'profile']);
+        Route::get('/logout', [AuthController::class, 'logout']);
+        Route::get('/pengguna/role/getoption', [PenggunaController::class, 'roles']);
         Route::apiResource('/pengguna', PenggunaController::class);
     }
 );
