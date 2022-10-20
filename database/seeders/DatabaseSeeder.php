@@ -25,6 +25,7 @@ class DatabaseSeeder extends Seeder
         // $this->reset();
 
         $this->call([
+            RoleSeeder::class,
             UserSeeder::class,
         ]);
 

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\API\Pengguna\PenggunaController;
 use App\Http\Controllers\Auth\AuthController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -21,7 +22,7 @@ Route::middleware('auth:sanctum')->get('/authentication', function (Request $req
 
 Route::post('login', [AuthController::class, 'index']);
 
-Route::group(
+Route::middleware('auth:sanctum')->group(
     [
         'namescape' => 'API',
     ],
@@ -30,6 +31,7 @@ Route::group(
          * profile
          */
         Route::get('/profile', [AuthController::class, 'profile']);
+        Route::apiResource('/pengguna', PenggunaController::class);
     }
 );
 
