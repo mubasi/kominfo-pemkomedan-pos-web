@@ -522,11 +522,13 @@ var render = function () {
                         },
                       }),
                       _vm._v(" "),
-                      _c("small", { staticClass: "text-warning" }, [
-                        _c("i", [
-                          _vm._v("Abaikan jika tidak merubah password"),
-                        ]),
-                      ]),
+                      _vm.edit
+                        ? _c("small", { staticClass: "text-warning" }, [
+                            _c("i", [
+                              _vm._v("Abaikan jika tidak merubah password"),
+                            ]),
+                          ])
+                        : _vm._e(),
                       _vm._v(" "),
                       _vm.errors != null
                         ? _c("div", { staticClass: "text-danger mt-1" }, [
@@ -579,11 +581,13 @@ var render = function () {
                         },
                       }),
                       _vm._v(" "),
-                      _c("small", { staticClass: "text-warning" }, [
-                        _c("i", [
-                          _vm._v("Abaikan jika tidak merubah password"),
-                        ]),
-                      ]),
+                      _vm.edit
+                        ? _c("small", { staticClass: "text-warning" }, [
+                            _c("i", [
+                              _vm._v("Abaikan jika tidak merubah password"),
+                            ]),
+                          ])
+                        : _vm._e(),
                       _vm._v(" "),
                       _vm.errors != null
                         ? _c("div", { staticClass: "text-danger mt-1" }, [

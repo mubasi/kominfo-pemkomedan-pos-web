@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\API\Pengguna\PenggunaController;
+use App\Http\Controllers\API\Produk\ProdukController;
 use App\Http\Controllers\Auth\AuthController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -35,6 +36,11 @@ Route::group(
         Route::get('/logout', [AuthController::class, 'logout']);
         Route::get('/pengguna/role/getoption', [PenggunaController::class, 'roles']);
         Route::apiResource('/pengguna', PenggunaController::class);
+
+        /**
+         * produk
+         */
+        Route::apiResource('/produk', ProdukController::class);
     }
 );
 

@@ -1,64 +1,72 @@
 <template>
-<div class="row">
+  <div class="row">
 
-  <!-- BLOCK INI AKAN MENGHANDLE LOAD DATA PERPAGE, DENGAN DEFAULT ADALAH 10 DATA -->
-  <div class="col-md-4 mb-2">
-    <div class="form-inline">
-      <label class="mr-2">Showing</label>
-      <!-- KETIKA SELECT BOXNYA DIGANTI, MAKA AKAN MENJALANKAN FUNGSI loadPerPage -->
-      <select class="form-control" v-model="meta.per_page" @change="loadPerPage">
-        <option value="10">10</option>
-        <option value="25">25</option>
-        <option value="50">50</option>
-        <option value="100">100</option>
-      </select>
-      <label class="ml-2">Entries</label>
+    <!-- BLOCK INI AKAN MENGHANDLE LOAD DATA PERPAGE, DENGAN DEFAULT ADALAH 10 DATA -->
+    <div class="col-md-4 mb-2">
+      <div class="form-inline">
+        <label class="mr-2">Showing</label>
+        <!-- KETIKA SELECT BOXNYA DIGANTI, MAKA AKAN MENJALANKAN FUNGSI loadPerPage -->
+        <select class="form-control" v-model="meta.per_page" @change="loadPerPage">
+          <option value="10">10</option>
+          <option value="25">25</option>
+          <option value="50">50</option>
+          <option value="100">100</option>
+        </select>
+        <label class="ml-2">Entries</label>
+      </div>
+    </div>
+
+    <div class="col-md-4 offset-md-4">
+      <div class="form-inline float-right">
+        <label class="mr-2">Search</label>
+        <input type="text" class="form-control" @input="search">
+      </div>
+    </div>
+    <div class="col-md-12">
+      <b-table striped hover :items="items" :busy="isBusy" :fields="fields" :sort-by.sync="sortBy"
+        :sort-desc.sync="sortDesc" show-empty>
+        <template #table-busy>
+          <div class="text-center text-danger my-2">
+            <b-spinner class="align-middle"></b-spinner>
+            <strong>Loading...</strong>
+          </div>
+        </template>
+
+        <template slot="index" slot-scope="row">
+          {{ row.index + 1 }}
+        </template>
+
+        <template slot="role" slot-scope="row">
+          <li v-for="(item, index) in row.item.roles" :key="index">
+            {{ item.name }}
+          </li>
+        </template>
+
+        <template slot="active" slot-scope="row">
+          <span v-html="row.value"></span>
+        </template>
+
+        <template slot="actions" slot-scope="row">
+          <!-- <a href="http://" class="btn btn-sm btn-success mr-1"><i class="fa fa-edit"></i></a> -->
+          <router-link :to="editUrl+row.item.id" class="btn btn-sm btn-success">
+            <i class="fa fa-edit"></i>
+          </router-link>
+          <b-button variant="danger" @click="deleteData(row.item.id)" class="ml-1" size="sm">
+            <i class="icon-trash"></i>
+          </b-button>
+        </template>
+      </b-table>
+    </div>
+
+    <div class="col-md-6">
+      <p>Showing {{ meta.from }} to {{ meta.to }} of {{ meta.total }} items</p>
+    </div>
+
+    <div class="col-md-6">
+      <b-pagination v-model="meta.current_page" :total-rows="meta.total" :per-page="meta.per_page" align="right"
+        @change="changePage" aria-controls="dw-datatable"></b-pagination>
     </div>
   </div>
-
-  <div class="col-md-4 offset-md-4">
-    <div class="form-inline float-right">
-      <label class="mr-2">Search</label>
-      <input type="text" class="form-control" @input="search">
-    </div>
-  </div>
-  <div class="col-md-12">
-    <b-table striped hover :items="items" :busy="isBusy" :fields="fields" :sort-by.sync="sortBy" :sort-desc.sync="sortDesc" show-empty>
-      <template #table-busy>
-        <div class="text-center text-danger my-2">
-          <b-spinner class="align-middle"></b-spinner>
-          <strong>Loading...</strong>
-        </div>
-      </template>
-
-      <template slot="index" slot-scope="row">
-        {{ row.index + 1 }}
-      </template>
-
-      <template slot="aktif" slot-scope="row">
-        <span v-html="row.value"></span>
-      </template>
-
-      <template slot="actions" slot-scope="row">
-        <!-- <a href="http://" class="btn btn-sm btn-success mr-1"><i class="fa fa-edit"></i></a> -->
-        <router-link :to="'/panel/main-data/agama/'+row.item.id" class="btn btn-sm btn-success">
-          <i class="fa fa-edit"></i>
-        </router-link>
-        <b-button variant="danger" @click="deleteData(row.item.id)" class="ml-1" size="sm">
-          <i class="icon-trash"></i>
-        </b-button>
-      </template>
-    </b-table>
-  </div>
-
-  <div class="col-md-6">
-    <p>Showing {{ meta.from }} to {{ meta.to }} of {{ meta.total }} items</p>
-  </div>
-
-  <div class="col-md-6">
-    <b-pagination v-model="meta.current_page" :total-rows="meta.total" :per-page="meta.per_page" align="right" @change="changePage" aria-controls="dw-datatable"></b-pagination>
-  </div>
-</div>
 </template>
 
 <script>

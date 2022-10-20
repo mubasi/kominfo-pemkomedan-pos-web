@@ -16,10 +16,13 @@ import VueSweetalert2 from "vue-sweetalert2";
 // If you don't need the styles, do not connect
 import "sweetalert2/dist/sweetalert2.min.css";
 
+import VueFormWizard from 'vue-form-wizard'
+import 'vue-form-wizard/dist/vue-form-wizard.min.css'
+
 // todo
 // cssVars()
 
-
+Vue.use(VueFormWizard)
 Vue.use(VueSweetalert2);
 Vue.use(BootstrapVue)
 

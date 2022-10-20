@@ -1,22 +1,25 @@
 <template>
-<div class="animated fadeIn">
-  <b-card>
-    <div slot="header">
-      Main Data -  Agama
-      <div class="card-header-actions" style="height: 21px;">
-        <b-button variant="success" size="sm"> <i class="fa fa-refresh" @click="loadPostsData" /></b-button>
-        <router-link :to="'/panel/main-data/agama/add'" class="btn btn-sm btn-primary"><i class="fa fa-edit" /> Entry Data</router-link>
-      </div>
-    </div>
-    <app-datatable v-if="fields" :editUrl="'/panel/data-opd/'" :deleteData="deleteRow" :isBusy="isBusy" :items="items" :fields="fields" :meta="meta" @per_page="handlePerPage" @pagination="handlePagination" @search="handleSearch" @sort="handleSort" />
-    <div class="text-center" v-else>
-      <b-spinner variant="success" label="Spinning"></b-spinner>
-      <br>
-      <span>Silahkan Tunggu . . .</span>
-    </div>
-  </b-card>
+    <div class="animated fadeIn">
+        <b-card>
+            <div slot="header">
+                Pengguna
+                <div class="card-header-actions" style="height: 21px;">
+                    <b-button variant="success" size="sm" @click="reloadPage"> <i class="fa fa-refresh" /></b-button>
+                    <router-link :to="'/panel/master-data/pengguna/add'" class="btn btn-sm btn-primary"><i
+                            class="fa fa-edit" /> Entry Data</router-link>
+                </div>
+            </div>
+            <app-datatable v-if="fields" :editUrl="'/panel/master-data/pengguna/'" :deleteData="deleteRow" :isBusy="isBusy"
+                :items="items" :fields="fields" :meta="meta" @per_page="handlePerPage" @pagination="handlePagination"
+                @search="handleSearch" @sort="handleSort" />
+            <div class="text-center" v-else>
+                <b-spinner variant="success" label="Spinning"></b-spinner>
+                <br>
+                <span>Silahkan Tunggu . . .</span>
+            </div>
+        </b-card>
 
-</div>
+    </div>
 </template>
 
 <script>
@@ -36,13 +39,21 @@ export default {
                     key: 'index',
                     label: 'No',
                     sortable: true
-                },{
-                    key: 'nama',
+                }, {
+                    key: 'name',
                     label: 'Nama',
+                    sortable: true
+                },{
+                    key: 'email',
+                    label: 'Email',
+                    sortable: true
+                },{
+                    key: 'role',
+                    label: 'Sebagai',
                     sortable: true
                 },
                 {
-                    key: 'aktif',
+                    key: 'active',
                     label: 'Aktif',
                     formatter: (value, key, item) => {
                         return value == 'Y' ? '<i class="fa fa-eye text-success"></i>' : '<i class="fa fa-eye-slash text-danger"></i>'
@@ -62,6 +73,7 @@ export default {
             sortBy: 'id', //DEFAULT SORTNYA ADALAH CREATED_AT
             sortByDesc: false, //ASCEDING
             isBusy: false,
+            path: '/api/pengguna',
         }
     },
     methods: {
@@ -97,7 +109,7 @@ export default {
                 },
             });
 
-            axios.delete('/api/agama/' + id).then((response) => {
+            axios.delete(this.path + '/' + id).then((response) => {
                 this.$swal({
                     title: 'Data Berhasil Dihapus',
                     icon: 'success',
@@ -123,16 +135,16 @@ export default {
             this.isBusy = true;
             let current_page = this.search == '' ? this.current_page : 1
             //LAKUKAN REQUEST KE API UNTUK MENGAMBIL DATA POSTINGAN
-            axios.get(`/api/agama`, {
-                    //KIRIMKAN PARAMETER BERUPA PAGE YANG SEDANG DILOAD, PENCARIAN, LOAD PERPAGE DAN SORTING.
-                    params: {
-                        page: current_page,
-                        per_page: this.per_page,
-                        q: this.search,
-                        sortby: this.sortBy,
-                        sortbydesc: this.sortByDesc ? 'DESC' : 'ASC'
-                    }
-                })
+            axios.get(this.path, {
+                //KIRIMKAN PARAMETER BERUPA PAGE YANG SEDANG DILOAD, PENCARIAN, LOAD PERPAGE DAN SORTING.
+                params: {
+                    page: current_page,
+                    per_page: this.per_page,
+                    q: this.search,
+                    sortby: this.sortBy,
+                    sortbydesc: this.sortByDesc ? 'DESC' : 'ASC'
+                }
+            })
                 .then((response) => {
                     this.isBusy = false;
                     //JIKA RESPONSENYA DITERIMA
@@ -175,7 +187,7 @@ export default {
         },
         reloadPage() {
             // alert('Hello');
-            loadPostsData();
+            this.loadPostsData();
         }
     },
     mounted() {

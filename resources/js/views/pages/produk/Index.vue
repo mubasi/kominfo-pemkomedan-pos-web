@@ -2,14 +2,14 @@
     <div class="animated fadeIn">
         <b-card>
             <div slot="header">
-                Pengguna
+                Produk
                 <div class="card-header-actions" style="height: 21px;">
-                    <b-button variant="success" size="sm" @click="reloadPage"> <i class="fa fa-refresh" /></b-button>
-                    <router-link :to="'/panel/master-data/pengguna/add'" class="btn btn-sm btn-primary"><i
+                    <b-button variant="success" size="sm" @click="reloadPage"> <i class="fa fa-refresh"/></b-button>
+                    <router-link :to="'/panel/master-data/produk/add'" class="btn btn-sm btn-primary"><i
                             class="fa fa-edit" /> Entry Data</router-link>
                 </div>
             </div>
-            <app-datatable v-if="fields" :editUrl="'/panel/master-data/pengguna/'" :deleteData="deleteRow" :isBusy="isBusy"
+            <app-datatable v-if="fields" :editUrl="'/panel/master-data/produk/'" :deleteData="deleteRow" :isBusy="isBusy"
                 :items="items" :fields="fields" :meta="meta" @per_page="handlePerPage" @pagination="handlePagination"
                 @search="handleSearch" @sort="handleSort" />
             <div class="text-center" v-else>
@@ -73,7 +73,7 @@ export default {
             sortBy: 'id', //DEFAULT SORTNYA ADALAH CREATED_AT
             sortByDesc: false, //ASCEDING
             isBusy: false,
-            path: '/api/pengguna',
+            path: '/api/produk',
         }
     },
     methods: {

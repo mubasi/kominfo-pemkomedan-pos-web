@@ -23,6 +23,10 @@ const Dashboard = () => import('@/views/Dashboard.vue')
 const Pengguna = () => import('@/views/pages/pengguna/Index')
 const PenggunaEntry = () => import('@/views/pages/pengguna/Entry')
 
+//produk
+const Produk = () => import('@/views/pages/produk/Index')
+const ProdukEntry = () => import('@/views/pages/produk/Entry')
+
 
 Vue.use(Router)
 
@@ -76,6 +80,24 @@ export default new Router({
               auth: true,
           },
           component: PenggunaEntry
+        },
+        {
+          path: 'master-data/produk',
+          name: 'Produk',
+          meta: {
+              title: "Produk",
+              auth: true,
+          },
+          component: Produk
+        },
+        {
+          path: 'master-data/produk/:act',
+          name: 'ProdukEntry',
+          meta: {
+              title: "Entry Produk",
+              auth: true,
+          },
+          component: ProdukEntry
         },
         // {
         //   path: 'icons',
