@@ -27,6 +27,10 @@ const PenggunaEntry = () => import('@/views/pages/pengguna/Entry')
 const Produk = () => import('@/views/pages/produk/Index')
 const ProdukEntry = () => import('@/views/pages/produk/Entry')
 
+//produk
+const KategoriProduk = () => import('@/views/pages/kategori_produk/Index')
+const KategoriProdukEntry = () => import('@/views/pages/kategori_produk/Entry')
+
 
 Vue.use(Router)
 
@@ -98,6 +102,24 @@ export default new Router({
               auth: true,
           },
           component: ProdukEntry
+        },
+        {
+          path: 'master-data/kategori-produk',
+          name: 'KategoriProduk',
+          meta: {
+              title: "KategoriProduk",
+              auth: true,
+          },
+          component: KategoriProduk
+        },
+        {
+          path: 'master-data/kategori-produk/:act',
+          name: 'KategoriProdukEntry',
+          meta: {
+              title: "Entry Kategori Produk",
+              auth: true,
+          },
+          component: KategoriProdukEntry
         },
         // {
         //   path: 'icons',

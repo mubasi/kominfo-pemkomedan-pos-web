@@ -3,8 +3,12 @@
 namespace App\Http\Controllers\API\Produk;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Produk\ProdukFormRequest as FormRequest;
 use App\Models\Produk\Produk;
+use Exception;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ProdukController extends Controller
 {
@@ -36,9 +40,54 @@ class ProdukController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(FormRequest $request)
     {
         //
+        $runTransaction = function () use ($request) {
+            try {
+                if ($request->id == null) {
+                    $rowItem = new Produk();
+                } else {
+                    $rowItem = Produk::findOrFail($request->id);
+                }
+
+                $rowItem->nama = $request->nama;
+                $rowItem->harga = $request->harga;
+                $rowItem->hpp = $request->hpp;
+                $rowItem->aktif = $request->aktif;
+                $rowItem->save();
+
+                $statusCode = JsonResponse::HTTP_OK;
+                $status = [
+                    'code'      => $statusCode,
+                    'name'      => 'OK',
+                    'message'   => 'Data Save Successfully',
+                ];
+
+                /**
+                 * Return Hasil
+                 * --------------------------------------------------
+                 */
+                return response()->json([
+                    'data' => $rowItem,
+                    'error' => false,
+                    'status' => $status,
+                ], $statusCode);
+            } catch (Exception $e) {
+                // $statusCode = $e->getCode();
+                $status = [
+                    'code'      => 500, //$e->getCode(),
+                    'name'      => '',
+                    'message'   => $e->getMessage()
+                ];
+                return response()->json([
+                    'error' => true,
+                    'status' => $status
+                ], 500);
+            }
+        };
+        $return = DB::transaction($runTransaction);
+        return $return;
     }
 
     /**

@@ -2,14 +2,14 @@
     <div class="animated fadeIn">
         <b-card>
             <div slot="header">
-                Pengguna
+                Kategori Produk
                 <div class="card-header-actions" style="height: 21px;">
                     <b-button variant="success" size="sm" @click="reloadPage"> <i class="fa fa-refresh" /></b-button>
-                    <router-link :to="'/panel/master-data/pengguna/add'" class="btn btn-sm btn-primary"><i
+                    <router-link :to="'/panel/master-data/kategori-produk/add'" class="btn btn-sm btn-primary"><i
                             class="fa fa-edit" /> Entry Data</router-link>
                 </div>
             </div>
-            <app-datatable v-if="fields" :editUrl="'/panel/master-data/pengguna/'" :deleteData="deleteRow" :isBusy="isBusy"
+            <app-datatable v-if="fields" :editUrl="'/panel/master-data/kategori-produk/'" :deleteData="deleteRow" :isBusy="isBusy"
                 :items="items" :fields="fields" :meta="meta" @per_page="handlePerPage" @pagination="handlePagination"
                 @search="handleSearch" @sort="handleSort" />
             <div class="text-center" v-else>
@@ -40,20 +40,12 @@ export default {
                     label: 'No',
                     sortable: true
                 }, {
-                    key: 'name',
+                    key: 'nama',
                     label: 'Nama',
-                    sortable: true
-                },{
-                    key: 'email',
-                    label: 'Email',
-                    sortable: true
-                },{
-                    key: 'role',
-                    label: 'Sebagai',
                     sortable: true
                 },
                 {
-                    key: 'active',
+                    key: 'aktif',
                     label: 'Aktif',
                     formatter: (value, key, item) => {
                         return value == 'Y' ? '<i class="fa fa-eye text-success"></i>' : '<i class="fa fa-eye-slash text-danger"></i>'
@@ -73,7 +65,7 @@ export default {
             sortBy: 'id', //DEFAULT SORTNYA ADALAH CREATED_AT
             sortByDesc: false, //ASCEDING
             isBusy: false,
-            path: '/api/pengguna',
+            path: '/api/kategori-produk',
         }
     },
     methods: {

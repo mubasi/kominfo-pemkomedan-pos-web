@@ -44,6 +44,10 @@ export default {
             icon: "icon-folder",
             children: [
                 {
+                    name: "Kategori Produk",
+                    url: "/panel/master-data/kategori-produk",
+                },
+                {
                     name: "Produk",
                     url: "/panel/master-data/produk",
                 },

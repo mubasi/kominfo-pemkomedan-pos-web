@@ -3,9 +3,9 @@
     <div class="mt-4">
       <b-card>
         <div slot="header">
-          Entry Data Agama
+          Entry Kategori Prouk
           <div class="card-header-actions" style="height: 21px;">
-            <router-link :to="'/panel/master-data/pengguna'" class="btn btn-sm btn-warning text-white"><i
+            <router-link :to="'/panel/master-data/kategori-produk'" class="btn btn-sm btn-warning text-white"><i
                 class="fa fa-arrow-left" /> Kembali</router-link>
           </div>
         </div>
@@ -13,71 +13,13 @@
 
           <b-form-row class="mb-1">
             <b-col md="2">
-              <label class="mt-1">Nama Lengkap</label>
+              <label class="mt-1">Nama Kategori</label>
             </b-col>
             <b-col md="10">
-              <b-form-input v-model="form.nama" type="text" placeholder="Masukkan Nama Lengkap"></b-form-input>
+              <b-form-input v-model="form.nama" type="text" placeholder="Masukkan Nama Karegori"></b-form-input>
               <div class="text-danger mt-1" v-if="errors != null">
                 <ul>
                   <li v-for="(item, index) in errors.nama" :key="index"> {{ item }} </li>
-                </ul>
-              </div>
-            </b-col>
-          </b-form-row>
-
-          <b-form-row class="mb-1">
-            <b-col md="2">
-              <label class="mt-1">Email</label>
-            </b-col>
-            <b-col md="10">
-              <b-form-input v-model="form.email" type="text" placeholder="Masukkan Email"></b-form-input>
-              <div class="text-danger mt-1" v-if="errors != null">
-                <ul>
-                  <li v-for="(item, index) in errors.email" :key="index"> {{ item }} </li>
-                </ul>
-              </div>
-            </b-col>
-          </b-form-row>
-
-          <b-form-row class="mb-1">
-            <b-col md="2">
-              <label class="mt-1">Password</label>
-            </b-col>
-            <b-col md="10">
-              <b-form-input v-model="form.password" type="password" placeholder="Masukkan Password"></b-form-input>
-              <small class="text-warning" v-if="edit"> <i>Abaikan jika tidak merubah password</i> </small>
-              <div class="text-danger mt-1" v-if="errors != null">
-                <ul>
-                  <li v-for="(item, index) in errors.password" :key="index"> {{ item }} </li>
-                </ul>
-              </div>
-            </b-col>
-          </b-form-row>
-
-          <b-form-row class="mb-1">
-            <b-col md="2">
-              <label class="mt-1">Ulangi Password</label>
-            </b-col>
-            <b-col md="10">
-              <b-form-input v-model="form.re_password" type="password" placeholder="Ulangi Password"></b-form-input>
-              <small class="text-warning" v-if="edit"> <i>Abaikan jika tidak merubah password</i> </small>
-              <div class="text-danger mt-1" v-if="errors != null">
-                <ul>
-                  <li v-for="(item, index) in errors.re_password" :key="index"> {{ item }} </li>
-                </ul>
-              </div>
-            </b-col>
-          </b-form-row>
-
-          <b-form-row class="mb-1">
-            <b-col md="2">
-              <label class="mt-1">Sebagai</label>
-            </b-col>
-            <b-col md="10">
-              <b-form-select v-model="form.role" :options="roles"></b-form-select>
-              <div class="text-danger mt-1" v-if="errors != null">
-                <ul>
-                  <li v-for="(item, index) in errors.role" :key="index"> {{ item }} </li>
                 </ul>
               </div>
             </b-col>
@@ -120,10 +62,6 @@ export default {
       form: {
         id: null,
         nama: '',
-        email: '',
-        password: '',
-        re_password: '',
-        role: '',
         aktif: 'Y',
       },
       options: [{
@@ -138,34 +76,16 @@ export default {
       errors: "",
       edit: false,
       roles: [],
-      path: '/api/pengguna',
-      path_role: '/api/pengguna/role/getoption'
+      path: '/api/kategori-produk',
     }
   },
   created() {
-    this.patchRole();
     let act = this.$route.params.act;
     if (act != 'add') {
       this.petchData(act);
     }
   },
   methods: {
-    patchRole() {
-      this.roles = [];
-      axios.get(this.path_role).then((response) => {
-        let data = response.data.data;
-
-        data.forEach(element => {
-          this.roles.push({
-            value: element.id,
-            text: element.name
-          })
-        });
-
-      }).catch((error) => {
-        // this.$swal.close();
-      });
-    },
     petchData(id) {
       this.$swal({
         title: 'Silahkan Tunggu . . .',
@@ -180,12 +100,8 @@ export default {
         let data = response.data.data;
         this.form = {
           id: data.id,
-          nama: data.name,
-          email: data.email,
-          password: null,
-          re_password: null,
-          role: data.roles[0].id,
-          aktif: data.active,
+          nama: data.nama,
+          aktif: data.aktif,
         };
         this.edit = true;
       }).catch((error) => {
@@ -226,7 +142,7 @@ export default {
           }).then((result) => {
             if (result.value) {
               // self.$route
-              self.$router.push('/panel/master-data/pengguna');
+              self.$router.push('/panel/master-data/kategori-produk');
             }
           });
         })

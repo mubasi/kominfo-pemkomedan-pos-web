@@ -36,13 +36,7 @@
           {{ row.index + 1 }}
         </template>
 
-        <template slot="role" slot-scope="row">
-          <li v-for="(item, index) in row.item.roles" :key="index">
-            {{ item.name }}
-          </li>
-        </template>
-
-        <template slot="active" slot-scope="row">
+        <template slot="aktif" slot-scope="row">
           <span v-html="row.value"></span>
         </template>
 

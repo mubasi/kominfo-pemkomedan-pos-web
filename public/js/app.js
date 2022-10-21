@@ -2297,6 +2297,15 @@ var Produk = function Produk() {
 
 var ProdukEntry = function ProdukEntry() {
   return __webpack_require__.e(/*! import() */ "resources_js_views_pages_produk_Entry_vue").then(__webpack_require__.bind(__webpack_require__, /*! @/views/pages/produk/Entry */ "./resources/js/views/pages/produk/Entry.vue"));
+}; //produk
+
+
+var KategoriProduk = function KategoriProduk() {
+  return __webpack_require__.e(/*! import() */ "resources_js_views_pages_kategori_produk_Index_vue").then(__webpack_require__.bind(__webpack_require__, /*! @/views/pages/kategori_produk/Index */ "./resources/js/views/pages/kategori_produk/Index.vue"));
+};
+
+var KategoriProdukEntry = function KategoriProdukEntry() {
+  return __webpack_require__.e(/*! import() */ "resources_js_views_pages_kategori_produk_Entry_vue").then(__webpack_require__.bind(__webpack_require__, /*! @/views/pages/kategori_produk/Entry */ "./resources/js/views/pages/kategori_produk/Entry.vue"));
 };
 
 vue__WEBPACK_IMPORTED_MODULE_0__["default"].use(vue_router__WEBPACK_IMPORTED_MODULE_1__["default"]);
@@ -2365,6 +2374,22 @@ vue__WEBPACK_IMPORTED_MODULE_0__["default"].use(vue_router__WEBPACK_IMPORTED_MOD
         auth: true
       },
       component: ProdukEntry
+    }, {
+      path: 'master-data/kategori-produk',
+      name: 'KategoriProduk',
+      meta: {
+        title: "KategoriProduk",
+        auth: true
+      },
+      component: KategoriProduk
+    }, {
+      path: 'master-data/kategori-produk/:act',
+      name: 'KategoriProdukEntry',
+      meta: {
+        title: "Entry Kategori Produk",
+        auth: true
+      },
+      component: KategoriProdukEntry
     } // {
     //   path: 'icons',
     //   redirect: '/icons/font-awesome',
@@ -79256,7 +79281,7 @@ module.exports = JSON.parse('{"_args":[["axios@0.21.4","D:\\\\Project\\\\kasir-a
 /******/ 		// This function allow to reference async chunks
 /******/ 		__webpack_require__.u = function(chunkId) {
 /******/ 			// return url for filenames not based on template
-/******/ 			if ({"resources_js_containers_DefaultContainer_vue":1,"resources_js_views_icons_Flags_vue":1,"resources_js_views_icons_FontAwesome_vue":1,"resources_js_views_icons_SimpleLineIcons_vue":1,"resources_js_views_icons_CoreUIIcons_vue":1,"resources_js_views_pages_Page404_vue":1,"resources_js_views_pages_Page500_vue":1,"resources_js_views_pages_Login_vue":1,"resources_js_views_pages_Register_vue":1,"resources_js_views_Dashboard_vue":1,"resources_js_views_pages_pengguna_Index_vue":1,"resources_js_views_pages_pengguna_Entry_vue":1,"resources_js_views_pages_produk_Index_vue":1,"resources_js_views_pages_produk_Entry_vue":1}[chunkId]) return "js/" + chunkId + ".js";
+/******/ 			if ({"resources_js_containers_DefaultContainer_vue":1,"resources_js_views_icons_Flags_vue":1,"resources_js_views_icons_FontAwesome_vue":1,"resources_js_views_icons_SimpleLineIcons_vue":1,"resources_js_views_icons_CoreUIIcons_vue":1,"resources_js_views_pages_Page404_vue":1,"resources_js_views_pages_Page500_vue":1,"resources_js_views_pages_Login_vue":1,"resources_js_views_pages_Register_vue":1,"resources_js_views_Dashboard_vue":1,"resources_js_views_pages_pengguna_Index_vue":1,"resources_js_views_pages_pengguna_Entry_vue":1,"resources_js_views_pages_produk_Index_vue":1,"resources_js_views_pages_produk_Entry_vue":1,"resources_js_views_pages_kategori_produk_Index_vue":1,"resources_js_views_pages_kategori_produk_Entry_vue":1}[chunkId]) return "js/" + chunkId + ".js";
 /******/ 			// return url for filenames based on template
 /******/ 			return undefined;
 /******/ 		};

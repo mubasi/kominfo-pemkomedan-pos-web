@@ -8,6 +8,43 @@
 /***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
+
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -66,14 +103,17 @@ __webpack_require__.r(__webpack_exports__);
   name: "EntryUser",
   data: function data() {
     return {
-      form: {
+      form_info_produk: {
         id: null,
         nama: '',
         harga: '',
         hpp: '',
         aktif: 'Y'
       },
-      form_gambar: [],
+      form_gambar_produk: {
+        id_produk: null,
+        list_gambar: []
+      },
       options: [{
         item: 'Y',
         name: 'Y'
@@ -84,7 +124,15 @@ __webpack_require__.r(__webpack_exports__);
       errors: "",
       edit: false,
       roles: [],
-      path: '/api/produk'
+      path_info_produk: '/api/produk',
+      path_gambar_produk: '/api/gambar-produk',
+      path_kategori_produk: '/api/kategori-produk',
+      loadingWizard: true,
+      errors_info_produk: null,
+      errors_gambar_produk: null,
+      step1: null,
+      step2: null,
+      step3: null
     };
   },
   created: function created() {
@@ -95,6 +143,11 @@ __webpack_require__.r(__webpack_exports__);
     }
   },
   methods: {
+    handleValidation: function handleValidation(isValid, tabIndex) {// console.log(tabIndex);
+    },
+    setLoading: function setLoading(value) {
+      this.loadingWizard = value;
+    },
     petchData: function petchData(id) {
       var _this = this;
 
@@ -120,6 +173,265 @@ __webpack_require__.r(__webpack_exports__);
         _this.$swal.close();
       });
     },
+    stepOneProses: function () {
+      var _stepOneProses = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee() {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                _context.next = 2;
+                return this.saveinfoproduk();
+
+              case 2:
+                if (!(this.form.id != null)) {
+                  _context.next = 6;
+                  break;
+                }
+
+                return _context.abrupt("return", true);
+
+              case 6:
+                return _context.abrupt("return", this.step1);
+
+              case 7:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee, this);
+      }));
+
+      function stepOneProses() {
+        return _stepOneProses.apply(this, arguments);
+      }
+
+      return stepOneProses;
+    }(),
+    saveinfoproduk: function () {
+      var _saveinfoproduk = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee2() {
+        var self;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                self = this;
+                self.errors_info_produk = null; // this.setLoading(true);
+
+                _context2.next = 4;
+                return axios.post(self.path_info_produk, self.form_info_produk).then(function (response) {
+                  var id_produk = response.data.data.id;
+                  self.form.id = id_produk;
+                  selft.form_gambar_produk.id_produk = id_produk; // return true;
+                  // this.setLoading(false);
+
+                  // return true;
+                  // this.setLoading(false);
+                  self.step1 = true;
+                }).catch(function (error) {
+                  self.step1 = false; // this.setLoading(false);
+
+                  // this.setLoading(false);
+                  if (error.response) {
+                    self.errors_konfig_msg = "Terjadi kesalahan, silahkan coba lagi.";
+
+                    if (error.response.data) {
+                      self.errors_info_produk = error.response.data;
+                    }
+                  } // return false;
+
+                });
+
+              case 4:
+              case "end":
+                return _context2.stop();
+            }
+          }
+        }, _callee2, this);
+      }));
+
+      function saveinfoproduk() {
+        return _saveinfoproduk.apply(this, arguments);
+      }
+
+      return saveinfoproduk;
+    }(),
+    stepTwoProses: function () {
+      var _stepTwoProses = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee3() {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee3$(_context3) {
+          while (1) {
+            switch (_context3.prev = _context3.next) {
+              case 0:
+                _context3.next = 2;
+                return this.saveGambarProduk();
+
+              case 2:
+                if (!(this.form_gambar_produk.id_produk != null && this.form_gambar_produk.list_gambar.length > 0)) {
+                  _context3.next = 6;
+                  break;
+                }
+
+                return _context3.abrupt("return", true);
+
+              case 6:
+                return _context3.abrupt("return", this.step2);
+
+              case 7:
+              case "end":
+                return _context3.stop();
+            }
+          }
+        }, _callee3, this);
+      }));
+
+      function stepTwoProses() {
+        return _stepTwoProses.apply(this, arguments);
+      }
+
+      return stepTwoProses;
+    }(),
+    saveGambarProduk: function () {
+      var _saveGambarProduk = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee4() {
+        var self;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee4$(_context4) {
+          while (1) {
+            switch (_context4.prev = _context4.next) {
+              case 0:
+                self = this;
+                self.errors_gambar_produk = null; // this.setLoading(true);
+
+                _context4.next = 4;
+                return axios.post(self.path_gambar_produk, self.form_gambar_produk).then(function (response) {
+                  // self.form.id = response.data.data.id;
+                  // return true;
+                  // this.setLoading(false);
+                  self.step1 = true;
+                }).catch(function (error) {
+                  self.step1 = false; // this.setLoading(false);
+
+                  // this.setLoading(false);
+                  if (error.response) {
+                    if (error.response.data) {
+                      self.errors_gambar_produk = error.response.data;
+                    }
+                  } // return false;
+
+                });
+
+              case 4:
+              case "end":
+                return _context4.stop();
+            }
+          }
+        }, _callee4, this);
+      }));
+
+      function saveGambarProduk() {
+        return _saveGambarProduk.apply(this, arguments);
+      }
+
+      return saveGambarProduk;
+    }(),
+    stepThreeProses: function () {
+      var _stepThreeProses = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee5() {
+        var _this2 = this;
+
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee5$(_context5) {
+          while (1) {
+            switch (_context5.prev = _context5.next) {
+              case 0:
+                this.$swal({
+                  title: 'Silahkan Tunggu . . .',
+                  showConfirmButton: false,
+                  allowOutsideClick: false,
+                  onBeforeOpen: function onBeforeOpen() {
+                    _this2.$swal.showLoading();
+                  }
+                });
+                _context5.next = 3;
+                return this.saveKategoriProduk();
+
+              case 3:
+                this.$swal.close();
+
+                if (this.step2) {
+                  this.$swal({
+                    title: 'Data Berhasil Disimpan',
+                    icon: 'success',
+                    confirmButtonColor: '#3085d6',
+                    allowOutsideClick: false
+                  }).then(function (result) {
+                    if (result.value) {
+                      // self.$route
+                      _this2.$router.push('/panel/list-banding-data');
+                    }
+                  });
+                }
+
+              case 5:
+              case "end":
+                return _context5.stop();
+            }
+          }
+        }, _callee5, this);
+      }));
+
+      function stepThreeProses() {
+        return _stepThreeProses.apply(this, arguments);
+      }
+
+      return stepThreeProses;
+    }(),
+    saveKategoriProduk: function () {
+      var _saveKategoriProduk = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee6() {
+        var self;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee6$(_context6) {
+          while (1) {
+            switch (_context6.prev = _context6.next) {
+              case 0:
+                self = this;
+                self.errors_data = null;
+                _context6.next = 4;
+                return axios.post(self.path_kategori_produk, {
+                  konfig_id: self.form.id,
+                  data: self.form_data
+                }).then(function (response) {
+                  self.step2 = true; // console.log(response.data);
+                  // this.$swal.close();
+                  // this.loadingWizard = false;
+                  // status = true;
+                  // return true;
+                }).catch(function (error) {
+                  // console.log(error.response);
+                  self.step2 = false;
+
+                  if (error.response) {
+                    // this.$swal.close();
+                    // this.$swal({
+                    //     icon: 'error',
+                    //     title: 'Periksa kembali form anda',
+                    //     allowOutsideClick: false,
+                    // });
+                    if (error.response.data) {
+                      self.errors_data = error.response.data;
+                    }
+                  } // return false;
+
+                });
+
+              case 4:
+              case "end":
+                return _context6.stop();
+            }
+          }
+        }, _callee6, this);
+      }));
+
+      function saveKategoriProduk() {
+        return _saveKategoriProduk.apply(this, arguments);
+      }
+
+      return saveKategoriProduk;
+    }(),
     submit: function submit(e) {
       e.preventDefault();
       var self = this;
@@ -342,7 +654,7 @@ var render = function () {
                       [
                         _c("b-col", { attrs: { md: "2" } }, [
                           _c("label", { staticClass: "mt-1" }, [
-                            _vm._v("Nama Lengkap"),
+                            _vm._v("Nama Produk"),
                           ]),
                         ]),
                         _vm._v(" "),
@@ -356,11 +668,11 @@ var render = function () {
                                 placeholder: "Masukkan Nama Lengkap",
                               },
                               model: {
-                                value: _vm.form.nama,
+                                value: _vm.form_info_produk.nama,
                                 callback: function ($$v) {
-                                  _vm.$set(_vm.form, "nama", $$v)
+                                  _vm.$set(_vm.form_info_produk, "nama", $$v)
                                 },
-                                expression: "form.nama",
+                                expression: "form_info_produk.nama",
                               },
                             }),
                             _vm._v(" "),
@@ -370,6 +682,108 @@ var render = function () {
                                     "ul",
                                     _vm._l(
                                       _vm.errors.nama,
+                                      function (item, index) {
+                                        return _c("li", { key: index }, [
+                                          _vm._v(" " + _vm._s(item) + " "),
+                                        ])
+                                      }
+                                    ),
+                                    0
+                                  ),
+                                ])
+                              : _vm._e(),
+                          ],
+                          1
+                        ),
+                      ],
+                      1
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "b-form-row",
+                      { staticClass: "mb-1" },
+                      [
+                        _c("b-col", { attrs: { md: "2" } }, [
+                          _c("label", { staticClass: "mt-1" }, [
+                            _vm._v("Harga Jual"),
+                          ]),
+                        ]),
+                        _vm._v(" "),
+                        _c(
+                          "b-col",
+                          { attrs: { md: "10" } },
+                          [
+                            _c("b-form-input", {
+                              attrs: {
+                                type: "text",
+                                placeholder: "Masukkan Harga Jual",
+                              },
+                              model: {
+                                value: _vm.form_info_produk.harga,
+                                callback: function ($$v) {
+                                  _vm.$set(_vm.form_info_produk, "harga", $$v)
+                                },
+                                expression: "form_info_produk.harga",
+                              },
+                            }),
+                            _vm._v(" "),
+                            _vm.errors != null
+                              ? _c("div", { staticClass: "text-danger mt-1" }, [
+                                  _c(
+                                    "ul",
+                                    _vm._l(
+                                      _vm.errors.harga,
+                                      function (item, index) {
+                                        return _c("li", { key: index }, [
+                                          _vm._v(" " + _vm._s(item) + " "),
+                                        ])
+                                      }
+                                    ),
+                                    0
+                                  ),
+                                ])
+                              : _vm._e(),
+                          ],
+                          1
+                        ),
+                      ],
+                      1
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "b-form-row",
+                      { staticClass: "mb-1" },
+                      [
+                        _c("b-col", { attrs: { md: "2" } }, [
+                          _c("label", { staticClass: "mt-1" }, [
+                            _vm._v("Harga Modal"),
+                          ]),
+                        ]),
+                        _vm._v(" "),
+                        _c(
+                          "b-col",
+                          { attrs: { md: "10" } },
+                          [
+                            _c("b-form-input", {
+                              attrs: {
+                                type: "text",
+                                placeholder: "Masukkan Harga Modal",
+                              },
+                              model: {
+                                value: _vm.form_info_produk.hpp,
+                                callback: function ($$v) {
+                                  _vm.$set(_vm.form_info_produk, "hpp", $$v)
+                                },
+                                expression: "form_info_produk.hpp",
+                              },
+                            }),
+                            _vm._v(" "),
+                            _vm.errors != null
+                              ? _c("div", { staticClass: "text-danger mt-1" }, [
+                                  _c(
+                                    "ul",
+                                    _vm._l(
+                                      _vm.errors.hpp,
                                       function (item, index) {
                                         return _c("li", { key: index }, [
                                           _vm._v(" " + _vm._s(item) + " "),
@@ -410,11 +824,11 @@ var render = function () {
                                 "disabled-field": "notEnabled",
                               },
                               model: {
-                                value: _vm.form.aktif,
+                                value: _vm.form_info_produk.aktif,
                                 callback: function ($$v) {
-                                  _vm.$set(_vm.form, "aktif", $$v)
+                                  _vm.$set(_vm.form_info_produk, "aktif", $$v)
                                 },
-                                expression: "form.aktif",
+                                expression: "form_info_produk.aktif",
                               },
                             }),
                             _vm._v(" "),
@@ -448,6 +862,13 @@ var render = function () {
                   attrs: {
                     title: "Gambar Produk",
                     "before-change": _vm.stepTwoProses,
+                  },
+                }),
+                _vm._v(" "),
+                _c("tab-content", {
+                  attrs: {
+                    title: "Kategori Produk",
+                    "before-change": _vm.stepThreeProses,
                   },
                 }),
               ],

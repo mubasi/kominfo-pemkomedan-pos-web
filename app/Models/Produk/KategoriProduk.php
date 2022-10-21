@@ -4,8 +4,11 @@ namespace App\Models\Produk;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class KategoriProduk extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
+    
+    protected $table = "kategori_produk";
 }

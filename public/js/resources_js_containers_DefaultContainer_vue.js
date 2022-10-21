@@ -3514,6 +3514,9 @@ __webpack_require__.r(__webpack_exports__);
     // url: "/panel/main-data",
     icon: "icon-folder",
     children: [{
+      name: "Kategori Produk",
+      url: "/panel/master-data/kategori-produk"
+    }, {
       name: "Produk",
       url: "/panel/master-data/produk"
     }, {

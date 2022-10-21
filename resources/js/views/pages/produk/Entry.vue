@@ -14,13 +14,40 @@
           <tab-content title="Info Produk" :before-change="stepOneProses">
             <b-form-row class="mb-1">
               <b-col md="2">
-                <label class="mt-1">Nama Lengkap</label>
+                <label class="mt-1">Nama Produk</label>
               </b-col>
               <b-col md="10">
-                <b-form-input v-model="form.nama" type="text" placeholder="Masukkan Nama Lengkap"></b-form-input>
+                <b-form-input v-model="form_info_produk.nama" type="text" placeholder="Masukkan Nama Lengkap"></b-form-input>
                 <div class="text-danger mt-1" v-if="errors != null">
                   <ul>
                     <li v-for="(item, index) in errors.nama" :key="index"> {{ item }} </li>
+                  </ul>
+                </div>
+              </b-col>
+            </b-form-row>
+
+            <b-form-row class="mb-1">
+              <b-col md="2">
+                <label class="mt-1">Harga Jual</label>
+              </b-col>
+              <b-col md="10">
+                <b-form-input v-model="form_info_produk.harga" type="text" placeholder="Masukkan Harga Jual"></b-form-input>
+                <div class="text-danger mt-1" v-if="errors != null">
+                  <ul>
+                    <li v-for="(item, index) in errors.harga" :key="index"> {{ item }} </li>
+                  </ul>
+                </div>
+              </b-col>
+            </b-form-row>
+            <b-form-row class="mb-1">
+              <b-col md="2">
+                <label class="mt-1">Harga Modal</label>
+              </b-col>
+              <b-col md="10">
+                <b-form-input v-model="form_info_produk.hpp" type="text" placeholder="Masukkan Harga Modal"></b-form-input>
+                <div class="text-danger mt-1" v-if="errors != null">
+                  <ul>
+                    <li v-for="(item, index) in errors.hpp" :key="index"> {{ item }} </li>
                   </ul>
                 </div>
               </b-col>
@@ -33,7 +60,7 @@
                 </label>
               </b-col>
               <b-col md="10">
-                <b-form-radio-group v-model="form.aktif" :options="options" class="mb-3" value-field="item"
+                <b-form-radio-group v-model="form_info_produk.aktif" :options="options" class="mb-3" value-field="item"
                   text-field="name" disabled-field="notEnabled"></b-form-radio-group>
                 <div class="text-danger mt-1" v-if="errors != null">
                   <ul>
@@ -44,6 +71,8 @@
             </b-form-row>
           </tab-content>
           <tab-content title="Gambar Produk" :before-change="stepTwoProses">
+          </tab-content>
+          <tab-content title="Kategori Produk" :before-change="stepThreeProses">
           </tab-content>
         </form-wizard>
       </b-card>
@@ -57,14 +86,17 @@ export default {
   name: "EntryUser",
   data() {
     return {
-      form: {
+      form_info_produk: {
         id: null,
         nama: '',
         harga: '',
         hpp: '',
         aktif: 'Y',
       },
-      form_gambar: [],
+      form_gambar_produk: {
+        id_produk: null,
+        list_gambar: [],
+      },
       options: [{
         item: 'Y',
         name: 'Y'
@@ -77,7 +109,15 @@ export default {
       errors: "",
       edit: false,
       roles: [],
-      path: '/api/produk',
+      path_info_produk: '/api/produk',
+      path_gambar_produk: '/api/gambar-produk',
+      path_kategori_produk: '/api/kategori-produk',
+      loadingWizard: true,
+      errors_info_produk: null,
+      errors_gambar_produk: null,
+      step1: null,
+      step2: null,
+      step3: null,
     }
   },
   created() {
@@ -87,6 +127,12 @@ export default {
     }
   },
   methods: {
+    handleValidation: function (isValid, tabIndex) {
+      // console.log(tabIndex);
+    },
+    setLoading: function (value) {
+      this.loadingWizard = value
+    },
     petchData(id) {
       this.$swal({
         title: 'Silahkan Tunggu . . .',
@@ -108,6 +154,135 @@ export default {
       }).catch((error) => {
         this.$swal.close();
       });
+    },
+    async stepOneProses() {
+      await this.saveinfoproduk();
+      if (this.form.id != null) {
+        // this.step1 = true;
+        return true;
+      } else {
+        return this.step1;
+      }
+    },
+    async saveinfoproduk() {
+      const self = this;
+      self.errors_info_produk = null;
+
+      // this.setLoading(true);
+      await axios.post(self.path_info_produk, self.form_info_produk)
+        .then(function (response) {
+          let id_produk = response.data.data.id;
+          self.form.id = id_produk;
+          selft.form_gambar_produk.id_produk = id_produk;
+          // return true;
+          // this.setLoading(false);
+          self.step1 = true;
+        })
+        .catch(function (error) {
+          self.step1 = false;
+          // this.setLoading(false);
+          if (error.response) {
+            self.errors_konfig_msg = "Terjadi kesalahan, silahkan coba lagi.";
+            if (error.response.data) {
+              self.errors_info_produk = error.response.data;
+            }
+          }
+          // return false;
+        });
+
+      // return status;
+    },
+    async stepTwoProses() {
+      await this.saveGambarProduk();
+      if (this.form_gambar_produk.id_produk != null && this.form_gambar_produk.list_gambar.length > 0) {
+        // this.step1 = true;
+        return true;
+      } else {
+        return this.step2;
+      }
+    },
+    async saveGambarProduk() {
+      const self = this;
+      self.errors_gambar_produk = null;
+
+      // this.setLoading(true);
+      await axios.post(self.path_gambar_produk, self.form_gambar_produk)
+        .then(function (response) {
+          // self.form.id = response.data.data.id;
+          // return true;
+          // this.setLoading(false);
+          self.step1 = true;
+        })
+        .catch(function (error) {
+          self.step1 = false;
+          // this.setLoading(false);
+          if (error.response) {
+            if (error.response.data) {
+              self.errors_gambar_produk = error.response.data;
+            }
+          }
+          // return false;
+        });
+
+      // return status;
+    },
+    async stepThreeProses() {
+
+      this.$swal({
+        title: 'Silahkan Tunggu . . .',
+        showConfirmButton: false,
+        allowOutsideClick: false,
+        onBeforeOpen: () => {
+          this.$swal.showLoading();
+        },
+      });
+      await this.saveKategoriProduk();
+      this.$swal.close();
+      if (this.step2) {
+        this.$swal({
+          title: 'Data Berhasil Disimpan',
+          icon: 'success',
+          confirmButtonColor: '#3085d6',
+          allowOutsideClick: false,
+        }).then((result) => {
+          if (result.value) {
+            // self.$route
+            this.$router.push('/panel/list-banding-data');
+          }
+        });
+      }
+    },
+    async saveKategoriProduk() {
+      const self = this;
+      self.errors_data = null;
+      await axios.post(self.path_kategori_produk, {
+        konfig_id: self.form.id,
+        data: self.form_data
+      })
+        .then(function (response) {
+          self.step2 = true;
+          // console.log(response.data);
+          // this.$swal.close();
+          // this.loadingWizard = false;
+          // status = true;
+          // return true;
+        })
+        .catch(function (error) {
+          // console.log(error.response);
+          self.step2 = false;
+          if (error.response) {
+            // this.$swal.close();
+            // this.$swal({
+            //     icon: 'error',
+            //     title: 'Periksa kembali form anda',
+            //     allowOutsideClick: false,
+            // });
+            if (error.response.data) {
+              self.errors_data = error.response.data;
+            }
+          }
+          // return false;
+        });
     },
     submit(e) {
       e.preventDefault();
