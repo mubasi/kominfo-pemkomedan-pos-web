@@ -3,6 +3,7 @@
 use App\Http\Controllers\API\Pengguna\PenggunaController;
 use App\Http\Controllers\API\Produk\KategoriProdukController;
 use App\Http\Controllers\API\Produk\ProdukController;
+use App\Http\Controllers\API\Produk\ProdukGambarController;
 use App\Http\Controllers\Auth\AuthController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -42,7 +43,12 @@ Route::group(
          * produk
          */
         Route::apiResource('/produk', ProdukController::class);
-        
+        /**
+         * gambar produk
+         */
+
+         Route::post('/gambar-produk', [ProdukGambarController::class, 'store']);
+
         /**
          * kategori produk
          */

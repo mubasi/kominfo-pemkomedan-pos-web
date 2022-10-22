@@ -163,6 +163,51 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 // import helpers from '../../helpers/helpers';
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "EntryUser",
@@ -178,7 +223,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       },
       form_gambar_produk: {
         id_produk: null,
-        list_gambar: []
+        gambar: []
       },
       options: [{
         item: "Y",
@@ -189,7 +234,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       }],
       errors: "",
       edit: false,
-      roles: [],
+      list_image: [],
       path_info_produk: "/api/produk",
       path_gambar_produk: "/api/gambar-produk",
       path_kategori_produk: "/api/kategori-produk",
@@ -239,7 +284,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         };
         _this.step1 = true;
 
-        if (data.gambar_produk != null) {
+        if (data.gambar_produk.length > 0) {
           _this.step2 = true;
         }
 
@@ -339,21 +384,23 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           while (1) {
             switch (_context3.prev = _context3.next) {
               case 0:
-                _context3.next = 2;
-                return this.saveGambarProduk();
+                console.log("step two" + this.list_image.length);
 
-              case 2:
-                if (!(this.form_gambar_produk.id_produk != null && this.form_gambar_produk.list_gambar.length > 0)) {
+                if (!(this.list_image.length == 0)) {
                   _context3.next = 6;
                   break;
                 }
 
-                return _context3.abrupt("return", true);
+                this.errors_gambar_produk = {
+                  gambar: ["The image field is required."]
+                };
+                return _context3.abrupt("return", false);
 
               case 6:
-                return _context3.abrupt("return", this.step2);
+                _context3.next = 8;
+                return this.saveGambarProduk();
 
-              case 7:
+              case 8:
               case "end":
                 return _context3.stop();
             }
@@ -369,33 +416,37 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     }(),
     saveGambarProduk: function () {
       var _saveGambarProduk = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee4() {
-        var self;
+        var self, formData, config;
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee4$(_context4) {
           while (1) {
             switch (_context4.prev = _context4.next) {
               case 0:
                 self = this;
-                self.errors_gambar_produk = null; // this.setLoading(true);
+                self.errors_gambar_produk = null;
+                formData = self.getherFormData();
+                config = {
+                  headers: {
+                    'content-type': 'multipart/form-data'
+                  }
+                };
+                _context4.next = 6;
+                return axios.post(self.path_gambar_produk, formData, config).then(function (response) {
+                  var data = response.data.data;
+                  console.log(data); //   self.form_images.id = data.id;
 
-                _context4.next = 4;
-                return axios.post(self.path_gambar_produk, self.form_gambar_produk).then(function (response) {
-                  // self.form.id = response.data.data.id;
-                  // return true;
-                  // this.setLoading(false);
-                  self.step1 = true;
+                  //   self.form_images.id = data.id;
+                  self.step2 = true;
                 }).catch(function (error) {
-                  self.step1 = false; // this.setLoading(false);
+                  self.step2 = false;
 
-                  // this.setLoading(false);
                   if (error.response) {
                     if (error.response.data) {
                       self.errors_gambar_produk = error.response.data;
                     }
-                  } // return false;
-
+                  }
                 });
 
-              case 4:
+              case 6:
               case "end":
                 return _context4.stop();
             }
@@ -559,34 +610,87 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     },
     getherFormData: function getherFormData() {
       var formData = new FormData();
-      var status = this.$route.params.status;
+      formData.append("produk_id", this.form_gambar_produk.id_produk); // formData.append('images', this.form_images.images);
 
-      if (status != "add") {
-        formData.append("id", status);
+      if (this.form_gambar_produk.gambar.length != 0) {
+        for (var i = 0; i < this.form_gambar_produk.gambar.length; i++) {
+          var file = this.form_gambar_produk.gambar[i];
+          formData.append("gambar[" + i + "]", file);
+        }
       }
 
-      formData.append("name", this.name);
-      formData.append("urutan", this.urutan);
-      formData.append("aktif", this.aktif);
       return formData;
     },
-    onImageChange: function onImageChange(e) {
-      var image = e.target.files[0];
+    onFileChange: function onFileChange(e) {
+      this.errors_gambar_produk = null;
+      var selectedFiles = e.target.files;
 
-      if (image.size > 1024 * 512) {
-        e.preventDefault();
-        this.$swal({
-          type: "warning",
-          title: "Terjadi kesalahan",
-          text: "ukuran gambar melebihi 500Kb"
+      for (var i = 0; i < selectedFiles.length; i++) {
+        this.list_image.push({
+          id: i + 1,
+          status: "new",
+          file: URL.createObjectURL(selectedFiles[i])
         });
-        this.$refs.imgupload.value = null;
-        this.urlImage = null;
-        return;
+        this.form_gambar_produk.gambar.push(selectedFiles[i]);
       }
+    },
+    deleteImage: function deleteImage(key, id, status) {
+      var _this3 = this;
 
-      this.gambar = image;
-      this.urlImage = URL.createObjectURL(image);
+      if (status == "new") {
+        this.list_image.splice(key, 1);
+        this.form_gambar_produk.gambar.splice(key, 1);
+      } else {
+        this.$swal({
+          title: "Peringatan",
+          icon: "warning",
+          text: "Apakah anda yakin ingin menghapus data ini?",
+          showCancelButton: true,
+          confirmButtonColor: "#3085d6",
+          cancelButtonColor: "#d33",
+          focusConfirm: false,
+          confirmButtonText: "Proses"
+        }).then(function (result) {
+          if (result.value) {
+            // alert('Helo')
+            _this3.prosesDeleteImage(id);
+          }
+        });
+      }
+    },
+    prosesDeleteImage: function prosesDeleteImage(id) {
+      var _this4 = this;
+
+      this.$swal({
+        title: "Silahkan Tunggu . . .",
+        showConfirmButton: false,
+        allowOutsideClick: false,
+        onBeforeOpen: function onBeforeOpen() {
+          _this4.$swal.showLoading();
+        }
+      });
+      axios.delete(this.path_gambar_produk + "/" + id).then(function (response) {
+        _this4.$swal({
+          title: "Data Berhasil Dihapus",
+          icon: "success",
+          confirmButtonColor: "#3085d6",
+          allowOutsideClick: false
+        }).then(function (result) {
+          if (result.value) {
+            var act = _this4.$route.params.act;
+
+            if (act != "add") {
+              _this4.petchData(act);
+            }
+          }
+        });
+      }).catch(function (error) {
+        _this4.$swal({
+          type: "error",
+          title: "Silahkan Coba Lagi!",
+          allowOutsideClick: false
+        });
+      });
     }
   }
 });
@@ -1011,12 +1115,99 @@ var render = function () {
                   1
                 ),
                 _vm._v(" "),
-                _c("tab-content", {
-                  attrs: {
-                    title: "Gambar Produk",
-                    "before-change": _vm.stepTwoProses,
+                _c(
+                  "tab-content",
+                  {
+                    attrs: {
+                      title: "Gambar Produk",
+                      "before-change": _vm.stepTwoProses,
+                    },
                   },
-                }),
+                  [
+                    _c("b-form-file", {
+                      ref: "file",
+                      staticClass: "mb-2",
+                      attrs: { multiple: "", accept: "image/*" },
+                      on: { change: _vm.onFileChange },
+                      model: {
+                        value: _vm.form_gambar_produk.gambar,
+                        callback: function ($$v) {
+                          _vm.$set(_vm.form_gambar_produk, "gambar", $$v)
+                        },
+                        expression: "form_gambar_produk.gambar",
+                      },
+                    }),
+                    _vm._v(" "),
+                    _c(
+                      "b-row",
+                      _vm._l(_vm.list_image, function (image, key) {
+                        return _c(
+                          "b-col",
+                          { key: key, attrs: { md: "4", lg: "3" } },
+                          [
+                            _c(
+                              "b-card",
+                              {
+                                staticClass: "mb-2 text-center",
+                                staticStyle: { "max-width": "20rem" },
+                                attrs: {
+                                  title: "",
+                                  "img-src": image.file,
+                                  "img-alt": "Image",
+                                  "img-top": "",
+                                  tag: "article",
+                                },
+                              },
+                              [
+                                _c(
+                                  "b-button",
+                                  {
+                                    attrs: { variant: "warning" },
+                                    on: {
+                                      click: function ($event) {
+                                        return _vm.deleteImage(
+                                          key,
+                                          image.id,
+                                          image.status
+                                        )
+                                      },
+                                    },
+                                  },
+                                  [_vm._v("Hapus Gambar")]
+                                ),
+                              ],
+                              1
+                            ),
+                          ],
+                          1
+                        )
+                      }),
+                      1
+                    ),
+                    _vm._v(" "),
+                    _vm.errors_gambar_produk != null
+                      ? _c("div", { staticClass: "text-danger mt-1" }, [
+                          _c(
+                            "ul",
+                            _vm._l(
+                              _vm.errors_gambar_produk.gambar,
+                              function (item, index) {
+                                return _c("li", { key: index }, [
+                                  _vm._v(
+                                    "\n                " +
+                                      _vm._s(item) +
+                                      "\n              "
+                                  ),
+                                ])
+                              }
+                            ),
+                            0
+                          ),
+                        ])
+                      : _vm._e(),
+                  ],
+                  1
+                ),
                 _vm._v(" "),
                 _c("tab-content", {
                   attrs: {

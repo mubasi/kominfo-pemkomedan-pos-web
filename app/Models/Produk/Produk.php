@@ -14,11 +14,11 @@ class Produk extends Model
 
     public function gambar_produk()
     {
-        return $this->hasMany(ProdukGambar::class, 'id', 'produk_id');
+        return $this->hasMany(ProdukGambar::class, 'produk_id', 'id');
     }
 
     public function kategori_produk()
     {
-        return $this->hasMany(KategoriProduk::class, 'id', 'produk_id');
+        return $this->hasMany(KategoriProdukRelasi::class, 'produk_id', 'id');
     }
 }
