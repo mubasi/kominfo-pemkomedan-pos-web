@@ -136,6 +136,51 @@
             </b-form-row>
           </tab-content>
           <tab-content title="Gambar Produk" :before-change="stepTwoProses">
+            <b-form-file
+              v-model="form_gambar_produk.gambar"
+              multiple
+              accept="image/*"
+              ref="file"
+              @change="onFileChange"
+              class="mb-2"
+            >
+            </b-form-file>
+
+            <b-row>
+              <b-col
+                md="4"
+                lg="3"
+                v-for="(image, key) in list_image"
+                :key="key"
+              >
+                <b-card
+                  title=""
+                  :img-src="image.file"
+                  img-alt="Image"
+                  img-top
+                  tag="article"
+                  style="max-width: 20rem"
+                  class="mb-2 text-center"
+                >
+                  <b-button
+                    variant="warning"
+                    @click="deleteImage(key, image.id, image.status)"
+                    >Hapus Gambar</b-button
+                  >
+                </b-card>
+              </b-col>
+            </b-row>
+
+            <div class="text-danger mt-1" v-if="errors_gambar_produk != null">
+              <ul>
+                <li
+                  v-for="(item, index) in errors_gambar_produk.gambar"
+                  :key="index"
+                >
+                  {{ item }}
+                </li>
+              </ul>
+            </div>
           </tab-content>
           <tab-content title="Kategori Produk" :before-change="stepThreeProses">
           </tab-content>
@@ -161,7 +206,7 @@ export default {
       },
       form_gambar_produk: {
         id_produk: null,
-        list_gambar: [],
+        gambar: [],
       },
       options: [
         {
@@ -175,7 +220,7 @@ export default {
       ],
       errors: "",
       edit: false,
-      roles: [],
+      list_image: [],
       path_info_produk: "/api/produk",
       path_gambar_produk: "/api/gambar-produk",
       path_kategori_produk: "/api/kategori-produk",
@@ -225,7 +270,7 @@ export default {
 
           this.step1 = true;
 
-          if (data.gambar_produk != null) {
+          if (data.gambar_produk.length > 0) {
             this.step2 = true;
           }
 
@@ -278,42 +323,46 @@ export default {
       // return status;
     },
     async stepTwoProses() {
-      await this.saveGambarProduk();
-      if (
-        this.form_gambar_produk.id_produk != null &&
-        this.form_gambar_produk.list_gambar.length > 0
-      ) {
-        // this.step1 = true;
-        return true;
+      console.log("step two" + this.list_image.length);
+      if (this.list_image.length == 0) {
+        this.errors_gambar_produk = {
+          gambar: ["The image field is required."],
+        };
+        return false;
       } else {
-        return this.step2;
+        // if (this.form_gambar_produk.gambar.length != 0) {
+        await this.saveGambarProduk();
+        // return true;
+        // } else {
+        //   return true;
+        // }
       }
     },
     async saveGambarProduk() {
+
       const self = this;
       self.errors_gambar_produk = null;
-
-      // this.setLoading(true);
-      await axios
-        .post(self.path_gambar_produk, self.form_gambar_produk)
+      var formData = self.getherFormData();
+      const config = {
+        headers: {
+          'content-type': 'multipart/form-data'
+        }
+      }
+      await axios.post(self.path_gambar_produk, formData, config)
         .then(function (response) {
-          // self.form.id = response.data.data.id;
-          // return true;
-          // this.setLoading(false);
-          self.step1 = true;
+          let data = response.data.data;
+          console.log(data);
+        //   self.form_images.id = data.id;
+          self.step2 = true;
         })
         .catch(function (error) {
-          self.step1 = false;
-          // this.setLoading(false);
+          self.step2 = false;
           if (error.response) {
             if (error.response.data) {
               self.errors_gambar_produk = error.response.data;
             }
           }
-          // return false;
         });
-
-      // return status;
     },
     async stepThreeProses() {
       this.$swal({
@@ -432,32 +481,85 @@ export default {
     getherFormData() {
       let formData = new FormData();
 
-      let status = this.$route.params.status;
-      if (status != "add") {
-        formData.append("id", status);
+      formData.append("produk_id", this.form_gambar_produk.id_produk);
+      // formData.append('images', this.form_images.images);
+      if (this.form_gambar_produk.gambar.length != 0) {
+        for (var i = 0; i < this.form_gambar_produk.gambar.length; i++) {
+          let file = this.form_gambar_produk.gambar[i];
+          formData.append("gambar[" + i + "]", file);
+        }
       }
-      formData.append("name", this.name);
-      formData.append("urutan", this.urutan);
-      formData.append("aktif", this.aktif);
 
       return formData;
     },
-    onImageChange(e) {
-      const image = e.target.files[0];
-      if (image.size > 1024 * 512) {
-        e.preventDefault();
-        this.$swal({
-          type: "warning",
-          title: "Terjadi kesalahan",
-          text: "ukuran gambar melebihi 500Kb",
+    onFileChange(e) {
+      this.errors_gambar_produk = null;
+      var selectedFiles = e.target.files;
+      for (var i = 0; i < selectedFiles.length; i++) {
+        this.list_image.push({
+          id: i + 1,
+          status: "new",
+          file: URL.createObjectURL(selectedFiles[i]),
         });
-        this.$refs.imgupload.value = null;
-        this.urlImage = null;
-        return;
+        this.form_gambar_produk.gambar.push(selectedFiles[i]);
       }
+    },
 
-      this.gambar = image;
-      this.urlImage = URL.createObjectURL(image);
+    deleteImage(key, id, status) {
+      if (status == "new") {
+        this.list_image.splice(key, 1);
+        this.form_gambar_produk.gambar.splice(key, 1);
+      } else {
+        this.$swal({
+          title: "Peringatan",
+          icon: "warning",
+          text: "Apakah anda yakin ingin menghapus data ini?",
+          showCancelButton: true,
+          confirmButtonColor: "#3085d6",
+          cancelButtonColor: "#d33",
+          focusConfirm: false,
+          confirmButtonText: "Proses",
+        }).then((result) => {
+          if (result.value) {
+            // alert('Helo')
+            this.prosesDeleteImage(id);
+          }
+        });
+      }
+    },
+    prosesDeleteImage(id) {
+      this.$swal({
+        title: "Silahkan Tunggu . . .",
+        showConfirmButton: false,
+        allowOutsideClick: false,
+        onBeforeOpen: () => {
+          this.$swal.showLoading();
+        },
+      });
+      axios
+        .delete(this.path_gambar_produk + "/" + id)
+        .then((response) => {
+          this.$swal({
+            title: "Data Berhasil Dihapus",
+            icon: "success",
+            confirmButtonColor: "#3085d6",
+            allowOutsideClick: false,
+          }).then((result) => {
+            if (result.value) {
+              let act = this.$route.params.act;
+              if (act != "add") {
+                this.petchData(act);
+              }
+            }
+          });
+        })
+        .catch((error) => {
+          this.$swal({
+            type: "error",
+            title: "Silahkan Coba Lagi!",
+            allowOutsideClick: false,
+          });
+        });
     },
   },
 };
