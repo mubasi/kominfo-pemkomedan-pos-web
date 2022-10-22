@@ -49,6 +49,8 @@ __webpack_require__.r(__webpack_exports__);
 
   },
   data: function data() {
+    var _this = this;
+
     return {
       //UNTUK VARIABLE FIELDS, DEFINISIKAN KEY UNTUK MASING-MASING DATA DAN SORTABLE BERNILAI TRUE JIKA INGIN MENAKTIFKAN FITUR SORTING DAN FALSE JIKA TIDAK INGIN MENGAKTIFKAN
       fields: [{
@@ -56,19 +58,25 @@ __webpack_require__.r(__webpack_exports__);
         label: 'No',
         sortable: true
       }, {
-        key: 'name',
-        label: 'Nama',
+        key: 'nama',
+        label: 'Nama Produk',
         sortable: true
       }, {
-        key: 'email',
-        label: 'Email',
-        sortable: true
+        key: 'harga',
+        label: 'Harga Jual',
+        sortable: true,
+        formatter: function formatter(value, key, item) {
+          return _this.formatRupiah(value, "Rp. ");
+        }
       }, {
-        key: 'role',
-        label: 'Sebagai',
-        sortable: true
+        key: 'hpp',
+        label: 'Modal',
+        sortable: true,
+        formatter: function formatter(value, key, item) {
+          return _this.formatRupiah(value, "Rp. ");
+        }
       }, {
-        key: 'active',
+        key: 'aktif',
         label: 'Aktif',
         formatter: function formatter(value, key, item) {
           return value == 'Y' ? '<i class="fa fa-eye text-success"></i>' : '<i class="fa fa-eye-slash text-danger"></i>';
@@ -102,8 +110,25 @@ __webpack_require__.r(__webpack_exports__);
         return moment__WEBPACK_IMPORTED_MODULE_0___default()(String(value)).format('DD/MM/YYYY hh:mm');
       }
     },
+
+    /* Fungsi formatRupiah */
+    formatRupiah: function formatRupiah(angka, prefix) {
+      var number_string = angka.replace(/[^,\d]/g, '').toString(),
+          split = number_string.split(','),
+          sisa = split[0].length % 3,
+          rupiah = split[0].substr(0, sisa),
+          ribuan = split[0].substr(sisa).match(/\d{3}/gi); // tambahkan titik jika yang di input sudah menjadi angka ribuan
+
+      if (ribuan) {
+        var separator = sisa ? '.' : '';
+        rupiah += separator + ribuan.join('.');
+      }
+
+      rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
+      return prefix == undefined ? rupiah : rupiah ? 'Rp. ' + rupiah : '';
+    },
     deleteRow: function deleteRow(id) {
-      var _this = this;
+      var _this2 = this;
 
       this.$swal({
         title: 'Peringatan',
@@ -117,36 +142,36 @@ __webpack_require__.r(__webpack_exports__);
       }).then(function (result) {
         if (result.value) {
           // alert('Helo')
-          _this.prosesDelete(id);
+          _this2.prosesDelete(id);
         }
       });
     },
     prosesDelete: function prosesDelete(id) {
-      var _this2 = this;
+      var _this3 = this;
 
       this.$swal({
         title: 'Silahkan Tunggu . . .',
         showConfirmButton: false,
         allowOutsideClick: false,
         onBeforeOpen: function onBeforeOpen() {
-          _this2.$swal.showLoading();
+          _this3.$swal.showLoading();
         }
       });
       axios__WEBPACK_IMPORTED_MODULE_2___default()["delete"](this.path + '/' + id).then(function (response) {
-        _this2.$swal({
+        _this3.$swal({
           title: 'Data Berhasil Dihapus',
           icon: 'success',
           confirmButtonColor: '#3085d6',
           allowOutsideClick: false
         }).then(function (result) {
           if (result.value) {
-            _this2.loadPostsData(); // self.$route
+            _this3.loadPostsData(); // self.$route
             // this.$router.go('/galery');
 
           }
         });
       }).catch(function (error) {
-        _this2.$swal({
+        _this3.$swal({
           type: 'error',
           title: 'Silahkan Coba Lagi!',
           allowOutsideClick: false
@@ -155,7 +180,7 @@ __webpack_require__.r(__webpack_exports__);
     },
     //METHOD INI AKAN MENGHANDLE REQUEST DATA KE API
     loadPostsData: function loadPostsData() {
-      var _this3 = this;
+      var _this4 = this;
 
       this.isBusy = true;
       var current_page = this.search == '' ? this.current_page : 1; //LAKUKAN REQUEST KE API UNTUK MENGAMBIL DATA POSTINGAN
@@ -170,13 +195,13 @@ __webpack_require__.r(__webpack_exports__);
           sortbydesc: this.sortByDesc ? 'DESC' : 'ASC'
         }
       }).then(function (response) {
-        _this3.isBusy = false; //JIKA RESPONSENYA DITERIMA
+        _this4.isBusy = false; //JIKA RESPONSENYA DITERIMA
 
         var getData = response.data.data;
-        _this3.items = getData.data; //MAKA ASSIGN DATA POSTINGAN KE DALAM VARIABLE ITEMS
+        _this4.items = getData.data; //MAKA ASSIGN DATA POSTINGAN KE DALAM VARIABLE ITEMS
         //DAN ASSIGN INFORMASI LAINNYA KE DALAM VARIABLE META
 
-        _this3.meta = {
+        _this4.meta = {
           total: getData.total,
           current_page: getData.current_page,
           per_page: getData.per_page,
@@ -22209,7 +22234,7 @@ var render = function () {
               },
             },
             {
-              key: "active",
+              key: "aktif",
               fn: function (row) {
                 return [
                   _c("span", { domProps: { innerHTML: _vm._s(row.value) } }),

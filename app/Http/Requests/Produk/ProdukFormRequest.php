@@ -36,6 +36,9 @@ class ProdukFormRequest extends FormRequest
 
         $rule = [
             'nama'                      => ['required', 'string'],
+            'harga'                      => ['required', 'integer'],
+            'hpp'                      => ['required', 'integer'],
+            'deskripsi'                      => ['required', 'string'],
             'aktif'                     => ['required', 'in:Y,N'],
         ];
 
@@ -60,6 +63,9 @@ class ProdukFormRequest extends FormRequest
     {
         return [
             'name'                      => 'Nama',
+            'harga'                      => 'Harga',
+            'deskripsi'                      => 'Deskripsi',
+            'hpp'                      => 'Modal',
             'aktif'                     => 'Aktif'
         ];
     }

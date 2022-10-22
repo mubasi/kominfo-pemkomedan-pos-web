@@ -54,6 +54,7 @@ class ProdukController extends Controller
                 $rowItem->nama = $request->nama;
                 $rowItem->harga = $request->harga;
                 $rowItem->hpp = $request->hpp;
+                $rowItem->deskripsi = $request->deskripsi;
                 $rowItem->aktif = $request->aktif;
                 $rowItem->save();
 
@@ -99,6 +100,16 @@ class ProdukController extends Controller
     public function show($id)
     {
         //
+        $data = Produk::with('gambar_produk', 'kategori_produk')
+            ->findOrFail($id);
+        $statusCode = JsonResponse::HTTP_OK;
+        $status = [
+            'statusCode' => $statusCode . " OK",
+            'status'    => true,
+            'code'      => 0,
+            'message'   => 'show user'
+        ];
+        return response()->json(['status' =>  $status, 'data' => $data]);
     }
 
     /**

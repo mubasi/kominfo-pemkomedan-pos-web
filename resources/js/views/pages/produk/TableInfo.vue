@@ -42,7 +42,7 @@
           </li>
         </template>
 
-        <template slot="active" slot-scope="row">
+        <template slot="aktif" slot-scope="row">
           <span v-html="row.value"></span>
         </template>
 

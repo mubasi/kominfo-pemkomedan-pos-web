@@ -98,6 +98,71 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 // import helpers from '../../helpers/helpers';
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "EntryUser",
@@ -105,28 +170,29 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     return {
       form_info_produk: {
         id: null,
-        nama: '',
-        harga: '',
-        hpp: '',
-        aktif: 'Y'
+        nama: "",
+        harga: "",
+        hpp: "",
+        deskripsi: "",
+        aktif: "Y"
       },
       form_gambar_produk: {
         id_produk: null,
         list_gambar: []
       },
       options: [{
-        item: 'Y',
-        name: 'Y'
+        item: "Y",
+        name: "Y"
       }, {
-        item: 'N',
-        name: 'N'
+        item: "N",
+        name: "N"
       }],
       errors: "",
       edit: false,
       roles: [],
-      path_info_produk: '/api/produk',
-      path_gambar_produk: '/api/gambar-produk',
-      path_kategori_produk: '/api/kategori-produk',
+      path_info_produk: "/api/produk",
+      path_gambar_produk: "/api/gambar-produk",
+      path_kategori_produk: "/api/kategori-produk",
       loadingWizard: true,
       errors_info_produk: null,
       errors_gambar_produk: null,
@@ -138,7 +204,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
   created: function created() {
     var act = this.$route.params.act;
 
-    if (act != 'add') {
+    if (act != "add") {
       this.petchData(act);
     }
   },
@@ -152,22 +218,35 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       var _this = this;
 
       this.$swal({
-        title: 'Silahkan Tunggu . . .',
+        title: "Silahkan Tunggu . . .",
         showConfirmButton: false,
         allowOutsideClick: false,
         onBeforeOpen: function onBeforeOpen() {
           _this.$swal.showLoading();
         }
       });
-      axios.get(this.path + '/' + id).then(function (response) {
+      axios.get(this.path_info_produk + "/" + id).then(function (response) {
         _this.$swal.close();
 
         var data = response.data.data;
-        _this.form = {
+        _this.form_info_produk = {
           id: data.id,
-          nama: data.name,
-          aktif: data.active
+          nama: data.nama,
+          harga: data.harga,
+          hpp: data.hpp,
+          deskripsi: data.deskripsi,
+          aktif: data.aktif
         };
+        _this.step1 = true;
+
+        if (data.gambar_produk != null) {
+          _this.step2 = true;
+        }
+
+        if (data.kategori_produk != null) {
+          _this.step3 = true;
+        }
+
         _this.edit = true;
       }).catch(function (error) {
         _this.$swal.close();
@@ -183,7 +262,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 return this.saveinfoproduk();
 
               case 2:
-                if (!(this.form.id != null)) {
+                if (!(this.form_info_produk.id != null)) {
                   _context.next = 6;
                   break;
                 }
@@ -220,8 +299,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 _context2.next = 4;
                 return axios.post(self.path_info_produk, self.form_info_produk).then(function (response) {
                   var id_produk = response.data.data.id;
-                  self.form.id = id_produk;
-                  selft.form_gambar_produk.id_produk = id_produk; // return true;
+                  self.form_info_produk.id = id_produk;
+                  self.form_gambar_produk.id_produk = id_produk; // return true;
                   // this.setLoading(false);
 
                   // return true;
@@ -232,8 +311,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
                   // this.setLoading(false);
                   if (error.response) {
-                    self.errors_konfig_msg = "Terjadi kesalahan, silahkan coba lagi.";
-
+                    // self.errors_konfig_msg = "Terjadi kesalahan, silahkan coba lagi.";
                     if (error.response.data) {
                       self.errors_info_produk = error.response.data;
                     }
@@ -340,7 +418,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
             switch (_context5.prev = _context5.next) {
               case 0:
                 this.$swal({
-                  title: 'Silahkan Tunggu . . .',
+                  title: "Silahkan Tunggu . . .",
                   showConfirmButton: false,
                   allowOutsideClick: false,
                   onBeforeOpen: function onBeforeOpen() {
@@ -355,14 +433,14 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
                 if (this.step2) {
                   this.$swal({
-                    title: 'Data Berhasil Disimpan',
-                    icon: 'success',
-                    confirmButtonColor: '#3085d6',
+                    title: "Data Berhasil Disimpan",
+                    icon: "success",
+                    confirmButtonColor: "#3085d6",
                     allowOutsideClick: false
                   }).then(function (result) {
                     if (result.value) {
                       // self.$route
-                      _this2.$router.push('/panel/list-banding-data');
+                      _this2.$router.push("/panel/list-banding-data");
                     }
                   });
                 }
@@ -443,7 +521,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       //   }
 
       self.$swal({
-        title: 'Silahkan Tunggu . . .',
+        title: "Silahkan Tunggu . . .",
         showConfirmButton: false,
         allowOutsideClick: false,
         onBeforeOpen: function onBeforeOpen() {
@@ -453,14 +531,14 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       axios.post(self.path, self.form).then(function (response) {
         self.$swal.close();
         self.$swal({
-          title: 'Data Berhasil Disimpan',
-          icon: 'success',
-          confirmButtonColor: '#3085d6',
+          title: "Data Berhasil Disimpan",
+          icon: "success",
+          confirmButtonColor: "#3085d6",
           allowOutsideClick: false
         }).then(function (result) {
           if (result.value) {
             // self.$route
-            self.$router.push('/panel/master-data/pengguna');
+            self.$router.push("/panel/master-data/pengguna");
           }
         });
       }).catch(function (error) {
@@ -468,8 +546,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         if (error.response) {
           self.$swal.close();
           self.$swal({
-            icon: 'error',
-            title: 'Periksa kembali form anda',
+            icon: "error",
+            title: "Periksa kembali form anda",
             allowOutsideClick: false
           });
 
@@ -483,13 +561,13 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       var formData = new FormData();
       var status = this.$route.params.status;
 
-      if (status != 'add') {
-        formData.append('id', status);
+      if (status != "add") {
+        formData.append("id", status);
       }
 
-      formData.append('name', this.name);
-      formData.append('urutan', this.urutan);
-      formData.append('aktif', this.aktif);
+      formData.append("name", this.name);
+      formData.append("urutan", this.urutan);
+      formData.append("aktif", this.aktif);
       return formData;
     },
     onImageChange: function onImageChange(e) {
@@ -498,9 +576,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       if (image.size > 1024 * 512) {
         e.preventDefault();
         this.$swal({
-          type: 'warning',
-          title: 'Terjadi kesalahan',
-          text: 'ukuran gambar melebihi 500Kb'
+          type: "warning",
+          title: "Terjadi kesalahan",
+          text: "ukuran gambar melebihi 500Kb"
         });
         this.$refs.imgupload.value = null;
         this.urlImage = null;
@@ -602,7 +680,7 @@ var render = function () {
           "b-card",
           [
             _c("div", { attrs: { slot: "header" }, slot: "header" }, [
-              _vm._v("\n        Entry Data Agama\n        "),
+              _vm._v("\n        Entry Produk\n        "),
               _c(
                 "div",
                 {
@@ -614,7 +692,7 @@ var render = function () {
                     "router-link",
                     {
                       staticClass: "btn btn-sm btn-warning text-white",
-                      attrs: { to: "/panel/master-data/pengguna" },
+                      attrs: { to: "/panel/master-data/produk" },
                     },
                     [
                       _c("i", { staticClass: "fa fa-arrow-left" }),
@@ -665,7 +743,7 @@ var render = function () {
                             _c("b-form-input", {
                               attrs: {
                                 type: "text",
-                                placeholder: "Masukkan Nama Lengkap",
+                                placeholder: "Masukkan Nama Produk",
                               },
                               model: {
                                 value: _vm.form_info_produk.nama,
@@ -676,15 +754,19 @@ var render = function () {
                               },
                             }),
                             _vm._v(" "),
-                            _vm.errors != null
+                            _vm.errors_info_produk != null
                               ? _c("div", { staticClass: "text-danger mt-1" }, [
                                   _c(
                                     "ul",
                                     _vm._l(
-                                      _vm.errors.nama,
+                                      _vm.errors_info_produk.nama,
                                       function (item, index) {
                                         return _c("li", { key: index }, [
-                                          _vm._v(" " + _vm._s(item) + " "),
+                                          _vm._v(
+                                            "\n                    " +
+                                              _vm._s(item) +
+                                              "\n                  "
+                                          ),
                                         ])
                                       }
                                     ),
@@ -727,15 +809,19 @@ var render = function () {
                               },
                             }),
                             _vm._v(" "),
-                            _vm.errors != null
+                            _vm.errors_info_produk != null
                               ? _c("div", { staticClass: "text-danger mt-1" }, [
                                   _c(
                                     "ul",
                                     _vm._l(
-                                      _vm.errors.harga,
+                                      _vm.errors_info_produk.harga,
                                       function (item, index) {
                                         return _c("li", { key: index }, [
-                                          _vm._v(" " + _vm._s(item) + " "),
+                                          _vm._v(
+                                            "\n                    " +
+                                              _vm._s(item) +
+                                              "\n                  "
+                                          ),
                                         ])
                                       }
                                     ),
@@ -778,15 +864,19 @@ var render = function () {
                               },
                             }),
                             _vm._v(" "),
-                            _vm.errors != null
+                            _vm.errors_info_produk != null
                               ? _c("div", { staticClass: "text-danger mt-1" }, [
                                   _c(
                                     "ul",
                                     _vm._l(
-                                      _vm.errors.hpp,
+                                      _vm.errors_info_produk.hpp,
                                       function (item, index) {
                                         return _c("li", { key: index }, [
-                                          _vm._v(" " + _vm._s(item) + " "),
+                                          _vm._v(
+                                            "\n                    " +
+                                              _vm._s(item) +
+                                              "\n                  "
+                                          ),
                                         ])
                                       }
                                     ),
@@ -806,9 +896,68 @@ var render = function () {
                       { staticClass: "mb-1" },
                       [
                         _c("b-col", { attrs: { md: "2" } }, [
-                          _c("label", [
-                            _vm._v("\n                Aktif\n              "),
+                          _c("label", { staticClass: "mt-1" }, [
+                            _vm._v("Deskripsi"),
                           ]),
+                        ]),
+                        _vm._v(" "),
+                        _c(
+                          "b-col",
+                          { attrs: { md: "10" } },
+                          [
+                            _c("b-form-textarea", {
+                              attrs: {
+                                id: "textarea",
+                                placeholder: "Enter something...",
+                                rows: "3",
+                                "max-rows": "6",
+                              },
+                              model: {
+                                value: _vm.form_info_produk.deskripsi,
+                                callback: function ($$v) {
+                                  _vm.$set(
+                                    _vm.form_info_produk,
+                                    "deskripsi",
+                                    $$v
+                                  )
+                                },
+                                expression: "form_info_produk.deskripsi",
+                              },
+                            }),
+                            _vm._v(" "),
+                            _vm.errors_info_produk != null
+                              ? _c("div", { staticClass: "text-danger mt-1" }, [
+                                  _c(
+                                    "ul",
+                                    _vm._l(
+                                      _vm.errors_info_produk.hpp,
+                                      function (item, index) {
+                                        return _c("li", { key: index }, [
+                                          _vm._v(
+                                            "\n                    " +
+                                              _vm._s(item) +
+                                              "\n                  "
+                                          ),
+                                        ])
+                                      }
+                                    ),
+                                    0
+                                  ),
+                                ])
+                              : _vm._e(),
+                          ],
+                          1
+                        ),
+                      ],
+                      1
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "b-form-row",
+                      { staticClass: "mb-1" },
+                      [
+                        _c("b-col", { attrs: { md: "2" } }, [
+                          _c("label", [_vm._v(" Aktif ")]),
                         ]),
                         _vm._v(" "),
                         _c(
@@ -840,7 +989,11 @@ var render = function () {
                                       _vm.errors.aktif,
                                       function (item, index) {
                                         return _c("li", { key: index }, [
-                                          _vm._v(" " + _vm._s(item) + " "),
+                                          _vm._v(
+                                            "\n                    " +
+                                              _vm._s(item) +
+                                              "\n                  "
+                                          ),
                                         ])
                                       }
                                     ),

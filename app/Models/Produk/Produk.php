@@ -11,4 +11,14 @@ class Produk extends Model
     use HasFactory, SoftDeletes;
 
     protected $table = 'produk';
+
+    public function gambar_produk()
+    {
+        return $this->hasMany(ProdukGambar::class, 'id', 'produk_id');
+    }
+
+    public function kategori_produk()
+    {
+        return $this->hasMany(KategoriProduk::class, 'id', 'produk_id');
+    }
 }
