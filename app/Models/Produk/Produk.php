@@ -17,8 +17,8 @@ class Produk extends Model
         return $this->hasMany(ProdukGambar::class, 'produk_id', 'id');
     }
 
-    public function kategori_produk()
+    public function kategori_produk_relasi()
     {
-        return $this->hasMany(KategoriProdukRelasi::class, 'produk_id', 'id');
+        return $this->hasMany(KategoriProdukRelasi::class, 'produk_id', 'id')->with('kategori_produk');
     }
 }

@@ -9,6 +9,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class KategoriProduk extends Model
 {
     use HasFactory, SoftDeletes;
-    
+
     protected $table = "kategori_produk";
 }

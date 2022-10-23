@@ -11,4 +11,9 @@ class KategoriProdukRelasi extends Model
     use HasFactory, SoftDeletes;
 
     protected $table = 'kategori_produk_relasi';
+
+    public function kategori_produk()
+    {
+        return $this->belongsTo(KategoriProduk::class, 'kategori_produk_id', 'id');
+    }
 }

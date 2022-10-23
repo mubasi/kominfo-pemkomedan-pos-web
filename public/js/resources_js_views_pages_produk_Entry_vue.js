@@ -149,68 +149,12 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 // import helpers from '../../helpers/helpers';
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "EntryUser",
+  components: {
+    "vue-select": __webpack_require__(Object(function webpackMissingModule() { var e = new Error("Cannot find module 'vue-select'"); e.code = 'MODULE_NOT_FOUND'; throw e; }()))
+  },
   data: function data() {
     return {
       form_info_produk: {
@@ -225,6 +169,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         id_produk: null,
         gambar: []
       },
+      form_kategori_produk: {
+        id_produk: null,
+        kategori: []
+      },
       options: [{
         item: "Y",
         name: "Y"
@@ -232,6 +180,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         item: "N",
         name: "N"
       }],
+      options_kategori: [],
       errors: "",
       edit: false,
       list_image: [],
@@ -241,17 +190,16 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       loadingWizard: true,
       errors_info_produk: null,
       errors_gambar_produk: null,
+      errors_kategori_produk: null,
       step1: null,
       step2: null,
       step3: null
     };
   },
   created: function created() {
-    var act = this.$route.params.act;
-
-    if (act != "add") {
-      this.petchData(act);
-    }
+    this.patchKategori();
+    this.petchDataEdit();
+    console.log(this.form_kategori_produk);
   },
   methods: {
     handleValidation: function handleValidation(isValid, tabIndex) {// console.log(tabIndex);
@@ -259,22 +207,37 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     setLoading: function setLoading(value) {
       this.loadingWizard = value;
     },
-    petchData: function petchData(id) {
+    patchKategori: function patchKategori() {
       var _this = this;
 
+      this.options_kategori = [];
+      axios.get(this.path_kategori_produk + "/getoption").then(function (response) {
+        var data = response.data.data;
+        data.forEach(function (element) {
+          _this.options_kategori.push({
+            value: element.id,
+            text: element.nama
+          });
+        });
+      }).catch(function (error) {});
+    },
+    petchData: function petchData(id) {
+      var _this2 = this;
+
+      this.list_image = [];
       this.$swal({
         title: "Silahkan Tunggu . . .",
         showConfirmButton: false,
         allowOutsideClick: false,
         onBeforeOpen: function onBeforeOpen() {
-          _this.$swal.showLoading();
+          _this2.$swal.showLoading();
         }
       });
       axios.get(this.path_info_produk + "/" + id).then(function (response) {
-        _this.$swal.close();
+        _this2.$swal.close();
 
         var data = response.data.data;
-        _this.form_info_produk = {
+        _this2.form_info_produk = {
           id: data.id,
           nama: data.nama,
           harga: data.harga,
@@ -282,19 +245,31 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           deskripsi: data.deskripsi,
           aktif: data.aktif
         };
-        _this.step1 = true;
+        _this2.form_gambar_produk.id_produk = data.id;
+        _this2.form_kategori_produk.id_produk = data.id;
+        _this2.step1 = true;
 
         if (data.gambar_produk.length > 0) {
-          _this.step2 = true;
+          _this2.step2 = true;
+          data.gambar_produk.forEach(function (element) {
+            _this2.list_image.push({
+              id: element.id,
+              status: "edit",
+              file: response.data.status.url + "/" + element.path
+            });
+          });
         }
 
-        if (data.kategori_produk != null) {
-          _this.step3 = true;
+        if (data.kategori_produk_relasi.length > 0) {
+          _this2.step3 = true;
+          data.kategori_produk_relasi.forEach(function (element) {
+            _this2.form_kategori_produk.kategori.push(element.kategori_produk.id);
+          });
         }
 
-        _this.edit = true;
+        _this2.edit = true;
       }).catch(function (error) {
-        _this.$swal.close();
+        _this2.$swal.close();
       });
     },
     stepOneProses: function () {
@@ -397,10 +372,21 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 return _context3.abrupt("return", false);
 
               case 6:
-                _context3.next = 8;
+                if (!(this.form_gambar_produk.gambar.length > 0)) {
+                  _context3.next = 12;
+                  break;
+                }
+
+                _context3.next = 9;
                 return this.saveGambarProduk();
 
-              case 8:
+              case 9:
+                return _context3.abrupt("return", true);
+
+              case 12:
+                return _context3.abrupt("return", true);
+
+              case 13:
               case "end":
                 return _context3.stop();
             }
@@ -426,16 +412,15 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 formData = self.getherFormData();
                 config = {
                   headers: {
-                    'content-type': 'multipart/form-data'
+                    "content-type": "multipart/form-data"
                   }
                 };
                 _context4.next = 6;
                 return axios.post(self.path_gambar_produk, formData, config).then(function (response) {
                   var data = response.data.data;
-                  console.log(data); //   self.form_images.id = data.id;
-
-                  //   self.form_images.id = data.id;
                   self.step2 = true;
+                  self.form_gambar_produk.gambar = [];
+                  self.petchDataEdit();
                 }).catch(function (error) {
                   self.step2 = false;
 
@@ -462,7 +447,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     }(),
     stepThreeProses: function () {
       var _stepThreeProses = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee5() {
-        var _this2 = this;
+        var _this3 = this;
 
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee5$(_context5) {
           while (1) {
@@ -473,7 +458,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   showConfirmButton: false,
                   allowOutsideClick: false,
                   onBeforeOpen: function onBeforeOpen() {
-                    _this2.$swal.showLoading();
+                    _this3.$swal.showLoading();
                   }
                 });
                 _context5.next = 3;
@@ -482,7 +467,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
               case 3:
                 this.$swal.close();
 
-                if (this.step2) {
+                if (this.step3) {
                   this.$swal({
                     title: "Data Berhasil Disimpan",
                     icon: "success",
@@ -491,7 +476,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   }).then(function (result) {
                     if (result.value) {
                       // self.$route
-                      _this2.$router.push("/panel/list-banding-data");
+                      _this3.$router.push("/panel/master-data/produk");
                     }
                   });
                 }
@@ -518,20 +503,18 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
             switch (_context6.prev = _context6.next) {
               case 0:
                 self = this;
-                self.errors_data = null;
+                self.errors_kategori_produk = null; //   console.log(self.form_kategori_produk);
+
                 _context6.next = 4;
-                return axios.post(self.path_kategori_produk, {
-                  konfig_id: self.form.id,
-                  data: self.form_data
-                }).then(function (response) {
-                  self.step2 = true; // console.log(response.data);
+                return axios.post(self.path_kategori_produk + "/save-produk", self.form_kategori_produk).then(function (response) {
+                  self.step3 = true; // console.log(response.data);
                   // this.$swal.close();
                   // this.loadingWizard = false;
                   // status = true;
                   // return true;
                 }).catch(function (error) {
                   // console.log(error.response);
-                  self.step2 = false;
+                  self.step3 = false;
 
                   if (error.response) {
                     // this.$swal.close();
@@ -541,7 +524,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                     //     allowOutsideClick: false,
                     // });
                     if (error.response.data) {
-                      self.errors_data = error.response.data;
+                      self.errors_kategori_produk = error.response.data;
                     }
                   } // return false;
 
@@ -635,7 +618,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       }
     },
     deleteImage: function deleteImage(key, id, status) {
-      var _this3 = this;
+      var _this4 = this;
 
       if (status == "new") {
         this.list_image.splice(key, 1);
@@ -653,44 +636,47 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         }).then(function (result) {
           if (result.value) {
             // alert('Helo')
-            _this3.prosesDeleteImage(id);
+            _this4.prosesDeleteImage(id);
           }
         });
       }
     },
     prosesDeleteImage: function prosesDeleteImage(id) {
-      var _this4 = this;
+      var _this5 = this;
 
       this.$swal({
         title: "Silahkan Tunggu . . .",
         showConfirmButton: false,
         allowOutsideClick: false,
         onBeforeOpen: function onBeforeOpen() {
-          _this4.$swal.showLoading();
+          _this5.$swal.showLoading();
         }
       });
       axios.delete(this.path_gambar_produk + "/" + id).then(function (response) {
-        _this4.$swal({
+        _this5.$swal({
           title: "Data Berhasil Dihapus",
           icon: "success",
           confirmButtonColor: "#3085d6",
           allowOutsideClick: false
         }).then(function (result) {
           if (result.value) {
-            var act = _this4.$route.params.act;
-
-            if (act != "add") {
-              _this4.petchData(act);
-            }
+            _this5.petchDataEdit();
           }
         });
       }).catch(function (error) {
-        _this4.$swal({
+        _this5.$swal({
           type: "error",
           title: "Silahkan Coba Lagi!",
           allowOutsideClick: false
         });
       });
+    },
+    petchDataEdit: function petchDataEdit() {
+      var act = this.$route.params.act;
+
+      if (act != "add") {
+        this.petchData(act);
+      }
     }
   }
 });
@@ -784,7 +770,7 @@ var render = function () {
           "b-card",
           [
             _c("div", { attrs: { slot: "header" }, slot: "header" }, [
-              _vm._v("\n        Entry Produk\n        "),
+              _vm._v("\n                Entry Produk\n                "),
               _c(
                 "div",
                 {
@@ -867,9 +853,9 @@ var render = function () {
                                       function (item, index) {
                                         return _c("li", { key: index }, [
                                           _vm._v(
-                                            "\n                    " +
+                                            "\n                                        " +
                                               _vm._s(item) +
-                                              "\n                  "
+                                              "\n                                    "
                                           ),
                                         ])
                                       }
@@ -922,9 +908,9 @@ var render = function () {
                                       function (item, index) {
                                         return _c("li", { key: index }, [
                                           _vm._v(
-                                            "\n                    " +
+                                            "\n                                        " +
                                               _vm._s(item) +
-                                              "\n                  "
+                                              "\n                                    "
                                           ),
                                         ])
                                       }
@@ -977,9 +963,9 @@ var render = function () {
                                       function (item, index) {
                                         return _c("li", { key: index }, [
                                           _vm._v(
-                                            "\n                    " +
+                                            "\n                                        " +
                                               _vm._s(item) +
-                                              "\n                  "
+                                              "\n                                    "
                                           ),
                                         ])
                                       }
@@ -1038,9 +1024,9 @@ var render = function () {
                                       function (item, index) {
                                         return _c("li", { key: index }, [
                                           _vm._v(
-                                            "\n                    " +
+                                            "\n                                        " +
                                               _vm._s(item) +
-                                              "\n                  "
+                                              "\n                                    "
                                           ),
                                         ])
                                       }
@@ -1094,9 +1080,9 @@ var render = function () {
                                       function (item, index) {
                                         return _c("li", { key: index }, [
                                           _vm._v(
-                                            "\n                    " +
+                                            "\n                                        " +
                                               _vm._s(item) +
-                                              "\n                  "
+                                              "\n                                    "
                                           ),
                                         ])
                                       }
@@ -1194,9 +1180,9 @@ var render = function () {
                               function (item, index) {
                                 return _c("li", { key: index }, [
                                   _vm._v(
-                                    "\n                " +
+                                    "\n                                " +
                                       _vm._s(item) +
-                                      "\n              "
+                                      "\n                            "
                                   ),
                                 ])
                               }
@@ -1209,12 +1195,80 @@ var render = function () {
                   1
                 ),
                 _vm._v(" "),
-                _c("tab-content", {
-                  attrs: {
-                    title: "Kategori Produk",
-                    "before-change": _vm.stepThreeProses,
+                _c(
+                  "tab-content",
+                  {
+                    attrs: {
+                      title: "Kategori Produk",
+                      "before-change": _vm.stepThreeProses,
+                    },
                   },
-                }),
+                  [
+                    _c(
+                      "b-form-row",
+                      { staticClass: "mb-1" },
+                      [
+                        _vm.options_kategori.length > 0
+                          ? _c(
+                              "b-col",
+                              { attrs: { md: "12" } },
+                              [
+                                _c("label", { staticClass: "mt-1" }, [
+                                  _vm._v("Kategori Produk"),
+                                ]),
+                                _vm._v(" "),
+                                _c("b-form-select", {
+                                  attrs: {
+                                    multiple: "",
+                                    options: _vm.options_kategori,
+                                  },
+                                  model: {
+                                    value: _vm.form_kategori_produk.kategori,
+                                    callback: function ($$v) {
+                                      _vm.$set(
+                                        _vm.form_kategori_produk,
+                                        "kategori",
+                                        $$v
+                                      )
+                                    },
+                                    expression: "form_kategori_produk.kategori",
+                                  },
+                                }),
+                                _vm._v(" "),
+                                _vm.errors_kategori_produk != null
+                                  ? _c(
+                                      "div",
+                                      { staticClass: "text-danger mt-1" },
+                                      [
+                                        _c(
+                                          "ul",
+                                          _vm._l(
+                                            _vm.errors_kategori_produk.kategori,
+                                            function (item, index) {
+                                              return _c("li", { key: index }, [
+                                                _vm._v(
+                                                  "\n                                        " +
+                                                    _vm._s(item) +
+                                                    "\n                                    "
+                                                ),
+                                              ])
+                                            }
+                                          ),
+                                          0
+                                        ),
+                                      ]
+                                    )
+                                  : _vm._e(),
+                              ],
+                              1
+                            )
+                          : _vm._e(),
+                      ],
+                      1
+                    ),
+                  ],
+                  1
+                ),
               ],
               1
             ),

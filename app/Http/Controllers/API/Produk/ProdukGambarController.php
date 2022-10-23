@@ -95,6 +95,7 @@ class ProdukGambarController extends Controller
     public function show($id)
     {
         //
+        abort(404);
     }
 
     /**
@@ -118,5 +119,29 @@ class ProdukGambarController extends Controller
     public function destroy($id)
     {
         //
+        $runTransaction = function () use ($id) {
+            try {
+                $rowItem = ProdukGambar::findOrfail($id);
+                $rowItem->delete();
+                $statusCode = JsonResponse::HTTP_OK;
+                $status = [
+                    'statusCode' => $statusCode . " Deleted",
+                    'status'    => 'success',
+                    'code'      => 0,
+                    'message'   => 'delete data'
+                ];
+                return response()->json(['status' =>  $status, 'data' => $rowItem]);
+            } catch (Exception $e) {
+                return response()->json(
+                    [
+                        'error' => 'Unable to delete',
+                        // 'msg' => $e->getMessage()
+                    ],
+                    400
+                );
+            }
+        };
+        $return = DB::transaction($runTransaction);
+        return $return;
     }
 }

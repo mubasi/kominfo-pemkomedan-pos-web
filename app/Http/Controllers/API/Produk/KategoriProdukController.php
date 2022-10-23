@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API\Produk;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Produk\KategoriProdukFormRequest as FormRequest;
 use App\Models\Produk\KategoriProduk;
+use App\Models\Produk\KategoriProdukRelasi;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -155,7 +156,7 @@ class KategoriProdukController extends Controller
         $return = DB::transaction($runTransaction);
         return $return;
     }
-    
+
     public function getoption()
     {
         $data = KategoriProduk::get();
@@ -166,5 +167,58 @@ class KategoriProdukController extends Controller
             'code'      => 0,
         ];
         return response()->json(['status' =>  $status, 'data' => $data]);
+    }
+
+    public function saveproduk(Request $request)
+    {
+        # code...
+        $runTransaction = function () use ($request) {
+
+            $tempKategoriRelasi = KategoriProdukRelasi::where('produk_id', $request->id_produk);
+
+            if($tempKategoriRelasi->exists()) {
+                $tempKategoriRelasi->delete();
+            }
+
+            try {
+                foreach ($request->kategori as $item) {
+                    $rowItem = new KategoriProdukRelasi();
+                    $rowItem->kategori_produk_id = $item['id'];
+                    $rowItem->produk_id = $request->id_produk;
+                    $rowItem->save();
+                }
+
+                $statusCode = JsonResponse::HTTP_OK;
+                $status = [
+                    'code'      => $statusCode,
+                    'name'      => 'OK',
+                    'message'   => 'Save Successfully',
+                ];
+
+                /**
+                 * Return Hasil
+                 * --------------------------------------------------
+                 */
+                return response()->json([
+                    'error' => false,
+                    'status' => $status,
+                    // 'data' => $rowItem,
+                ], $statusCode);
+            } catch (Exception $e) {
+                // $statusCode = $e->getCode();
+                $status = [
+                    'code'      => 500, //$e->getCode(),
+                    'name'      => '',
+                    'message'   => $e->getMessage()
+                ];
+                return response()->json([
+                    'error' => true,
+                    'status' => $status
+                ], 500);
+            }
+        };
+        $return = DB::transaction($runTransaction);
+        return $return;
+
     }
 }

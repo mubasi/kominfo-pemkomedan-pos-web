@@ -19,6 +19,7 @@ import "sweetalert2/dist/sweetalert2.min.css";
 import VueFormWizard from 'vue-form-wizard'
 import 'vue-form-wizard/dist/vue-form-wizard.min.css'
 
+
 // todo
 // cssVars()
 

@@ -46,8 +46,11 @@ Route::group(
         /**
          * gambar produk
          */
-
-         Route::post('/gambar-produk', [ProdukGambarController::class, 'store']);
+         Route::apiResource('/gambar-produk', ProdukGambarController::class);
+         /**
+          * kategori produk
+          */
+        Route::post('/kategori-produk/save-produk', [KategoriProdukController::class, 'saveproduk']);
 
         /**
          * kategori produk

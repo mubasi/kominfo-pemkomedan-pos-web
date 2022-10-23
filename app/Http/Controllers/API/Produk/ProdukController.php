@@ -100,14 +100,15 @@ class ProdukController extends Controller
     public function show($id)
     {
         //
-        $data = Produk::with('gambar_produk', 'kategori_produk')
+        $data = Produk::with('gambar_produk', 'kategori_produk_relasi')
             ->findOrFail($id);
         $statusCode = JsonResponse::HTTP_OK;
         $status = [
             'statusCode' => $statusCode . " OK",
             'status'    => true,
             'code'      => 0,
-            'message'   => 'show user'
+            'message'   => 'show data',
+            'url'       => url('storage')
         ];
         return response()->json(['status' =>  $status, 'data' => $data]);
     }
