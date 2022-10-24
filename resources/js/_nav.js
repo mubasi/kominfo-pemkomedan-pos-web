@@ -9,11 +9,11 @@ export default {
                 attributes: {},
             },
         },
-        {
-            name: "Dashboard",
-            url: "/panel/dashboard",
-            icon: "icon-speedometer",
-        },
+        // {
+        //     name: "Dashboard",
+        //     url: "/panel/dashboard",
+        //     icon: "icon-speedometer",
+        // },
         {
             name: "Transaksi",
             url: "/panel/transaksi",

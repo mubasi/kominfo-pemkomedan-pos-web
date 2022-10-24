@@ -27,6 +27,12 @@ class ProdukController extends Controller
             })
             ->with('gambar_produk', 'kategori_produk_relasi');
 
+        if(request()->kategori) {
+            $posts->whereHas('kategori_produk_relasi', function($q){
+                $q->where('kategori_produk_id', request()->kategori);
+            });
+        }
+
         if (request()->aktif) {
             $posts->where('aktif', request()->aktif);
         }

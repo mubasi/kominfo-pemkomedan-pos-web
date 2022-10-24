@@ -3485,11 +3485,12 @@ __webpack_require__.r(__webpack_exports__);
       element: "",
       attributes: {}
     }
-  }, {
-    name: "Dashboard",
-    url: "/panel/dashboard",
-    icon: "icon-speedometer"
-  }, {
+  }, // {
+  //     name: "Dashboard",
+  //     url: "/panel/dashboard",
+  //     icon: "icon-speedometer",
+  // },
+  {
     name: "Transaksi",
     url: "/panel/transaksi",
     icon: "icon-note"

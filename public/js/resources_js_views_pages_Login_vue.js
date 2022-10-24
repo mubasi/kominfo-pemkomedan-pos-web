@@ -89,14 +89,12 @@ __webpack_require__.r(__webpack_exports__);
       self.textLogin = '<i class="fa fa-spinner fa-spin"></i>'; // window.axios.defaults.headers.common['X-CSRF-TOKEN'] = self.csrf;
 
       axios.post('/api/login', self.form).then(function (response) {
-        var data = response.data.status.data;
+        var data = response.data.status.data; // if (data.roles[0].name == 'Kasir') {
 
-        if (data.roles[0].name == 'Kasir') {
-          self.$router.push('/panel/transaksi');
-        } else {
-          self.$router.push('/panel/dashboard');
-        } // window.location.href = '/dashboard';
-
+        self.$router.push('/panel/transaksi'); // } else {
+        //   self.$router.push('/panel/dashboard');
+        // }
+        // window.location.href = '/dashboard';
       }, function (error) {
         // console.log(error.response);
         if (error.response.status == 403) {

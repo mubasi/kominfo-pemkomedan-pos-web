@@ -104,6 +104,43 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
  //IMPORT AXIOS
 
@@ -113,7 +150,12 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
   data: function data() {
     return {
       path: "/api/transaksi",
+      path_kategori_produk: "/api/kategori-produk/getoption",
       path_produk: "/api/produk",
+      options_kategori: [{
+        value: 0,
+        text: 'Semua'
+      }],
       items: [],
       meta: [],
       //JUGA BERLAKU UNTUK META
@@ -126,10 +168,25 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       //DEFAULT SORTNYA ADALAH CREATED_AT
       sortByDesc: false,
       //ASCEDING
+      kategori: 0,
       isBusy: false
     };
   },
   methods: {
+    patchKategori: function patchKategori() {
+      var _this = this;
+
+      axios__WEBPACK_IMPORTED_MODULE_2___default().get(this.path_kategori_produk).then(function (response) {
+        var data = response.data.data;
+        data.forEach(function (element) {
+          _this.options_kategori.push({
+            value: element.id,
+            text: element.nama
+          });
+        });
+      }).catch(function (error) {});
+    },
+
     /* Fungsi formatRupiah */
     formatRupiah: function formatRupiah(angka, prefix) {
       var number_string = angka.replace(/[^,\d]/g, "").toString(),
@@ -157,7 +214,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     },
     loadData: function () {
       var _loadData = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee() {
-        var _this = this;
+        var _this2 = this;
 
         var current_page;
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee$(_context) {
@@ -169,6 +226,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 _context.next = 4;
                 return axios__WEBPACK_IMPORTED_MODULE_2___default().get(this.path_produk, {
                   params: {
+                    kategori: this.kategori == 0 ? null : this.kategori,
                     page: current_page,
                     per_page: this.per_page,
                     q: this.search,
@@ -176,12 +234,12 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                     sortbydesc: this.sortByDesc ? "DESC" : "ASC"
                   }
                 }).then(function (response) {
-                  _this.isBusy = false; //JIKA RESPONSENYA DITERIMA
+                  _this2.isBusy = false; //JIKA RESPONSENYA DITERIMA
 
                   //JIKA RESPONSENYA DITERIMA
                   var getData = response.data.data;
-                  _this.items = getData.data;
-                  _this.meta = {
+                  _this2.items = getData.data;
+                  _this2.meta = {
                     total: getData.total,
                     current_page: getData.current_page,
                     per_page: getData.per_page,
@@ -215,6 +273,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     }
   },
   mounted: function mounted() {
+    this.patchKategori();
     this.loadData();
   }
 });
@@ -21772,6 +21831,124 @@ var render = function () {
                       1
                     ),
                   ]),
+                  _vm._v(" "),
+                  _c(
+                    "b-row",
+                    { staticClass: "mb-2" },
+                    [
+                      _c(
+                        "b-col",
+                        { attrs: { md: "6" } },
+                        [
+                          _c(
+                            "b-form-row",
+                            { staticClass: "mb-1" },
+                            [
+                              _c(
+                                "b-col",
+                                { attrs: { md: "12" } },
+                                [
+                                  _c("label", { staticClass: "mt-1" }, [
+                                    _vm._v("Nama Produk"),
+                                  ]),
+                                  _vm._v(" "),
+                                  _c("b-form-input", {
+                                    attrs: {
+                                      type: "text",
+                                      placeholder: "Cari Nama Produk",
+                                    },
+                                    model: {
+                                      value: _vm.search,
+                                      callback: function ($$v) {
+                                        _vm.search = $$v
+                                      },
+                                      expression: "search",
+                                    },
+                                  }),
+                                ],
+                                1
+                              ),
+                            ],
+                            1
+                          ),
+                        ],
+                        1
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "b-col",
+                        { attrs: { md: "4" } },
+                        [
+                          _c(
+                            "b-form-row",
+                            { staticClass: "mb-1" },
+                            [
+                              _c(
+                                "b-col",
+                                { attrs: { md: "12" } },
+                                [
+                                  _c("label", { staticClass: "mt-1" }, [
+                                    _vm._v("Kategori Produk"),
+                                  ]),
+                                  _vm._v(" "),
+                                  _c("b-form-select", {
+                                    attrs: { options: _vm.options_kategori },
+                                    model: {
+                                      value: _vm.kategori,
+                                      callback: function ($$v) {
+                                        _vm.kategori = $$v
+                                      },
+                                      expression: "kategori",
+                                    },
+                                  }),
+                                ],
+                                1
+                              ),
+                            ],
+                            1
+                          ),
+                        ],
+                        1
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "b-col",
+                        { attrs: { md: "2" } },
+                        [
+                          _c(
+                            "b-form-row",
+                            { staticClass: "mb-1" },
+                            [
+                              _c(
+                                "b-col",
+                                { attrs: { md: "12" } },
+                                [
+                                  _c("label", { staticClass: "mt-1" }, [
+                                    _vm._v("#"),
+                                  ]),
+                                  _vm._v(" "),
+                                  _c(
+                                    "b-button",
+                                    {
+                                      attrs: { variant: "primary", block: "" },
+                                      on: { click: _vm.reloadPage },
+                                    },
+                                    [_vm._v("Cari")]
+                                  ),
+                                ],
+                                1
+                              ),
+                            ],
+                            1
+                          ),
+                        ],
+                        1
+                      ),
+                    ],
+                    1
+                  ),
+                  _vm._v(" "),
+                  _c("hr"),
                   _vm._v(" "),
                   _vm.items.length > 0 && !_vm.isBusy
                     ? _c(

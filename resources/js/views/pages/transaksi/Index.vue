@@ -13,6 +13,43 @@
                             class="fa fa-edit" /> Entry Data</router-link> -->
             </div>
           </div>
+
+          <b-row class="mb-2">
+            <b-col md="6">
+              <b-form-row class="mb-1">
+                <b-col md="12">
+                  <label class="mt-1">Nama Produk</label>
+                  <b-form-input
+                    v-model="search"
+                    type="text"
+                    placeholder="Cari Nama Produk"
+                  ></b-form-input>
+                </b-col>
+              </b-form-row>
+            </b-col>
+            <b-col md="4">
+              <b-form-row class="mb-1">
+                <b-col md="12">
+                  <label class="mt-1">Kategori Produk</label>
+                  <b-form-select
+                    v-model="kategori"
+                    :options="options_kategori"
+                  ></b-form-select>
+                </b-col>
+              </b-form-row>
+            </b-col>
+            <b-col md="2">
+              <b-form-row class="mb-1">
+                <b-col md="12">
+                  <label class="mt-1">#</label>
+                  <b-button variant="primary" @click="reloadPage" block>Cari</b-button>
+                </b-col>
+              </b-form-row>
+            </b-col>
+          </b-row>
+
+          <hr />
+
           <b-row v-if="items.length > 0 && !isBusy">
             <b-col md="4" sm="6" v-for="(item, index) in items" :key="index">
               <b-card
@@ -91,7 +128,12 @@ export default {
   data: function () {
     return {
       path: "/api/transaksi",
+      path_kategori_produk: "/api/kategori-produk/getoption",
       path_produk: "/api/produk",
+      options_kategori: [{
+        value: 0,
+        text: 'Semua'
+      }],
       items: [],
       meta: [], //JUGA BERLAKU UNTUK META
       current_page: 1, //DEFAULT PAGE YANG AKTIF ADA PAGE 1
@@ -99,10 +141,25 @@ export default {
       search: "",
       sortBy: "nama", //DEFAULT SORTNYA ADALAH CREATED_AT
       sortByDesc: false, //ASCEDING
+      kategori: 0,
       isBusy: false,
     };
   },
   methods: {
+    patchKategori() {
+      axios
+        .get(this.path_kategori_produk)
+        .then((response) => {
+          let data = response.data.data;
+          data.forEach((element) => {
+            this.options_kategori.push({
+              value: element.id,
+              text: element.nama,
+            });
+          });
+        })
+        .catch((error) => {});
+    },
     /* Fungsi formatRupiah */
     formatRupiah(angka, prefix) {
       var number_string = angka.replace(/[^,\d]/g, "").toString(),
@@ -134,6 +191,7 @@ export default {
       await axios
         .get(this.path_produk, {
           params: {
+            kategori: this.kategori == 0 ? null : this.kategori,
             page: current_page,
             per_page: this.per_page,
             q: this.search,
@@ -166,6 +224,7 @@ export default {
     },
   },
   mounted() {
+    this.patchKategori();
     this.loadData();
   },
 };

@@ -80,11 +80,11 @@ export default {
             axios.post('/api/login', self.form)
                 .then(response => {
                         let data = response.data.status.data;
-                        if (data.roles[0].name == 'Kasir') {
+                        // if (data.roles[0].name == 'Kasir') {
                           self.$router.push('/panel/transaksi');
-                        } else {
-                          self.$router.push('/panel/dashboard');
-                        }
+                        // } else {
+                        //   self.$router.push('/panel/dashboard');
+                        // }
                         // window.location.href = '/dashboard';
                     },
                     error => {
