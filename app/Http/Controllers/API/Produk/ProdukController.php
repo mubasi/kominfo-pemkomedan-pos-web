@@ -24,7 +24,8 @@ class ProdukController extends Controller
             ->orderBy(request()->sortby, request()->sortbydesc)
             ->when(request()->q, function ($posts) {
                 $posts = $posts->where('nama', 'LIKE', '%' . request()->q . '%');
-            });
+            })
+            ->with('gambar_produk', 'kategori_produk_relasi');
 
         if (request()->aktif) {
             $posts->where('aktif', request()->aktif);

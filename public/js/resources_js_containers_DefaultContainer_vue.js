@@ -3492,15 +3492,15 @@ __webpack_require__.r(__webpack_exports__);
   }, {
     name: "Transaksi",
     url: "/panel/transaksi",
-    icon: "icon-speedometer"
+    icon: "icon-note"
   }, {
     name: "Riwayat Transaksi",
     url: "/panel/riwayat transaksi",
-    icon: "icon-speedometer"
+    icon: "icon-notebook"
   }, {
     name: "Laporan",
     url: "/panel/laporan",
-    icon: "icon-speedometer"
+    icon: "icon-printer"
   }, {
     title: true,
     name: "Master Data",

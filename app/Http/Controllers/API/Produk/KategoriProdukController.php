@@ -183,7 +183,7 @@ class KategoriProdukController extends Controller
             try {
                 foreach ($request->kategori as $item) {
                     $rowItem = new KategoriProdukRelasi();
-                    $rowItem->kategori_produk_id = $item['id'];
+                    $rowItem->kategori_produk_id = $item;
                     $rowItem->produk_id = $request->id_produk;
                     $rowItem->save();
                 }

@@ -40,6 +40,10 @@ export default {
                     label: 'No',
                     sortable: true
                 }, {
+                    key: 'kategori_produk',
+                    label: 'Kategori Produk',
+                    sortable: true
+                }, {
                     key: 'nama',
                     label: 'Nama Produk',
                     sortable: true

@@ -31,6 +31,9 @@ const ProdukEntry = () => import('@/views/pages/produk/Entry')
 const KategoriProduk = () => import('@/views/pages/kategori_produk/Index')
 const KategoriProdukEntry = () => import('@/views/pages/kategori_produk/Entry')
 
+//transaksi
+const Transaksi = () => import('@/views/pages/transaksi/Index')
+
 
 Vue.use(Router)
 
@@ -121,36 +124,45 @@ export default new Router({
           },
           component: KategoriProdukEntry
         },
-        // {
-        //   path: 'icons',
-        //   redirect: '/icons/font-awesome',
-        //   name: 'Icons',
-        //   component: {
-        //     render (c) { return c('router-view') }
-        //   },
-        //   children: [
-        //     {
-        //       path: 'coreui-icons',
-        //       name: 'CoreUI Icons',
-        //       component: CoreUIIcons
-        //     },
-        //     {
-        //       path: 'flags',
-        //       name: 'Flags',
-        //       component: Flags
-        //     },
-        //     {
-        //       path: 'font-awesome',
-        //       name: 'Font Awesome',
-        //       component: FontAwesome
-        //     },
-        //     {
-        //       path: 'simple-line-icons',
-        //       name: 'Simple Line Icons',
-        //       component: SimpleLineIcons
-        //     }
-        //   ]
-        // },
+        {
+          path: 'transaksi',
+          name: 'Transaksi',
+          meta: {
+              title: "Transaksi",
+              auth: true,
+          },
+          component: Transaksi
+        },
+        {
+          path: 'icons',
+          redirect: '/icons/font-awesome',
+          name: 'Icons',
+          component: {
+            render (c) { return c('router-view') }
+          },
+          children: [
+            {
+              path: 'coreui-icons',
+              name: 'CoreUI Icons',
+              component: CoreUIIcons
+            },
+            {
+              path: 'flags',
+              name: 'Flags',
+              component: Flags
+            },
+            {
+              path: 'font-awesome',
+              name: 'Font Awesome',
+              component: FontAwesome
+            },
+            {
+              path: 'simple-line-icons',
+              name: 'Simple Line Icons',
+              component: SimpleLineIcons
+            }
+          ]
+        },
       ]
     },
     {

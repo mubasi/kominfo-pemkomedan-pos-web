@@ -149,12 +149,99 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 // import helpers from '../../helpers/helpers';
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "EntryUser",
-  components: {
-    "vue-select": __webpack_require__(Object(function webpackMissingModule() { var e = new Error("Cannot find module 'vue-select'"); e.code = 'MODULE_NOT_FOUND'; throw e; }()))
-  },
+  components: {},
   data: function data() {
     return {
       form_info_produk: {
@@ -199,7 +286,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
   created: function created() {
     this.patchKategori();
     this.petchDataEdit();
-    console.log(this.form_kategori_produk);
   },
   methods: {
     handleValidation: function handleValidation(isValid, tabIndex) {// console.log(tabIndex);
@@ -320,7 +406,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 return axios.post(self.path_info_produk, self.form_info_produk).then(function (response) {
                   var id_produk = response.data.data.id;
                   self.form_info_produk.id = id_produk;
-                  self.form_gambar_produk.id_produk = id_produk; // return true;
+                  self.form_gambar_produk.id_produk = id_produk;
+                  self.form_kategori_produk.id_produk = id_produk; // return true;
                   // this.setLoading(false);
 
                   // return true;
@@ -359,10 +446,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           while (1) {
             switch (_context3.prev = _context3.next) {
               case 0:
-                console.log("step two" + this.list_image.length);
-
                 if (!(this.list_image.length == 0)) {
-                  _context3.next = 6;
+                  _context3.next = 5;
                   break;
                 }
 
@@ -371,22 +456,22 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 };
                 return _context3.abrupt("return", false);
 
-              case 6:
+              case 5:
                 if (!(this.form_gambar_produk.gambar.length > 0)) {
-                  _context3.next = 12;
+                  _context3.next = 11;
                   break;
                 }
 
-                _context3.next = 9;
+                _context3.next = 8;
                 return this.saveGambarProduk();
 
-              case 9:
+              case 8:
+                return _context3.abrupt("return", true);
+
+              case 11:
                 return _context3.abrupt("return", true);
 
               case 12:
-                return _context3.abrupt("return", true);
-
-              case 13:
               case "end":
                 return _context3.stop();
             }
@@ -770,7 +855,7 @@ var render = function () {
           "b-card",
           [
             _c("div", { attrs: { slot: "header" }, slot: "header" }, [
-              _vm._v("\n                Entry Produk\n                "),
+              _vm._v("\n        Entry Produk\n        "),
               _c(
                 "div",
                 {
@@ -853,9 +938,9 @@ var render = function () {
                                       function (item, index) {
                                         return _c("li", { key: index }, [
                                           _vm._v(
-                                            "\n                                        " +
+                                            "\n                    " +
                                               _vm._s(item) +
-                                              "\n                                    "
+                                              "\n                  "
                                           ),
                                         ])
                                       }
@@ -908,9 +993,9 @@ var render = function () {
                                       function (item, index) {
                                         return _c("li", { key: index }, [
                                           _vm._v(
-                                            "\n                                        " +
+                                            "\n                    " +
                                               _vm._s(item) +
-                                              "\n                                    "
+                                              "\n                  "
                                           ),
                                         ])
                                       }
@@ -963,9 +1048,9 @@ var render = function () {
                                       function (item, index) {
                                         return _c("li", { key: index }, [
                                           _vm._v(
-                                            "\n                                        " +
+                                            "\n                    " +
                                               _vm._s(item) +
-                                              "\n                                    "
+                                              "\n                  "
                                           ),
                                         ])
                                       }
@@ -1024,9 +1109,9 @@ var render = function () {
                                       function (item, index) {
                                         return _c("li", { key: index }, [
                                           _vm._v(
-                                            "\n                                        " +
+                                            "\n                    " +
                                               _vm._s(item) +
-                                              "\n                                    "
+                                              "\n                  "
                                           ),
                                         ])
                                       }
@@ -1080,9 +1165,9 @@ var render = function () {
                                       function (item, index) {
                                         return _c("li", { key: index }, [
                                           _vm._v(
-                                            "\n                                        " +
+                                            "\n                    " +
                                               _vm._s(item) +
-                                              "\n                                    "
+                                              "\n                  "
                                           ),
                                         ])
                                       }
@@ -1180,9 +1265,9 @@ var render = function () {
                               function (item, index) {
                                 return _c("li", { key: index }, [
                                   _vm._v(
-                                    "\n                                " +
+                                    "\n                " +
                                       _vm._s(item) +
-                                      "\n                            "
+                                      "\n              "
                                   ),
                                 ])
                               }
@@ -1213,26 +1298,48 @@ var render = function () {
                               "b-col",
                               { attrs: { md: "12" } },
                               [
-                                _c("label", { staticClass: "mt-1" }, [
-                                  _vm._v("Kategori Produk"),
-                                ]),
-                                _vm._v(" "),
-                                _c("b-form-select", {
-                                  attrs: {
-                                    multiple: "",
-                                    options: _vm.options_kategori,
-                                  },
-                                  model: {
-                                    value: _vm.form_kategori_produk.kategori,
-                                    callback: function ($$v) {
-                                      _vm.$set(
-                                        _vm.form_kategori_produk,
-                                        "kategori",
-                                        $$v
-                                      )
-                                    },
-                                    expression: "form_kategori_produk.kategori",
-                                  },
+                                _c("b-form-group", {
+                                  attrs: { label: "Kategori Produk" },
+                                  scopedSlots: _vm._u(
+                                    [
+                                      {
+                                        key: "default",
+                                        fn: function (ref) {
+                                          var ariaDescribedby =
+                                            ref.ariaDescribedby
+                                          return [
+                                            _c("b-form-checkbox-group", {
+                                              attrs: {
+                                                size: "md",
+                                                options: _vm.options_kategori,
+                                                "aria-describedby":
+                                                  ariaDescribedby,
+                                                name: "flavour-2a",
+                                                stacked: "",
+                                              },
+                                              model: {
+                                                value:
+                                                  _vm.form_kategori_produk
+                                                    .kategori,
+                                                callback: function ($$v) {
+                                                  _vm.$set(
+                                                    _vm.form_kategori_produk,
+                                                    "kategori",
+                                                    $$v
+                                                  )
+                                                },
+                                                expression:
+                                                  "form_kategori_produk.kategori",
+                                              },
+                                            }),
+                                          ]
+                                        },
+                                      },
+                                    ],
+                                    null,
+                                    false,
+                                    2264882363
+                                  ),
                                 }),
                                 _vm._v(" "),
                                 _vm.errors_kategori_produk != null
@@ -1247,9 +1354,9 @@ var render = function () {
                                             function (item, index) {
                                               return _c("li", { key: index }, [
                                                 _vm._v(
-                                                  "\n                                        " +
+                                                  "\n                    " +
                                                     _vm._s(item) +
-                                                    "\n                                    "
+                                                    "\n                  "
                                                 ),
                                               ])
                                             }
