@@ -10,11 +10,10 @@
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var laravel_vue_pagination__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! laravel-vue-pagination */ "./node_modules/laravel-vue-pagination/dist/laravel-vue-pagination.es.js");
-/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
-/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
-/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_2__);
 
 
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
@@ -66,27 +65,64 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
-
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
  //IMPORT AXIOS
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "transaksiProduk",
-  components: {
-    pagination: laravel_vue_pagination__WEBPACK_IMPORTED_MODULE_1__["default"]
-  },
+  components: {},
   data: function data() {
     return {
       path: "/api/transaksi",
       path_produk: "/api/produk",
+      items: [],
       meta: [],
       //JUGA BERLAKU UNTUK META
       current_page: 1,
       //DEFAULT PAGE YANG AKTIF ADA PAGE 1
-      per_page: 10,
+      per_page: 12,
       //DEFAULT LOAD PERPAGE ADALAH 10
       search: "",
-      sortBy: "id",
+      sortBy: "nama",
       //DEFAULT SORTNYA ADALAH CREATED_AT
       sortByDesc: false,
       //ASCEDING
@@ -94,20 +130,44 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     };
   },
   methods: {
-    list: function () {
-      var _list = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee() {
+    /* Fungsi formatRupiah */
+    formatRupiah: function formatRupiah(angka, prefix) {
+      var number_string = angka.replace(/[^,\d]/g, "").toString(),
+          split = number_string.split(","),
+          sisa = split[0].length % 3,
+          rupiah = split[0].substr(0, sisa),
+          ribuan = split[0].substr(sisa).match(/\d{3}/gi); // tambahkan titik jika yang di input sudah menjadi angka ribuan
+
+      if (ribuan) {
+        var separator = sisa ? "." : "";
+        rupiah += separator + ribuan.join(".");
+      }
+
+      rupiah = split[1] != undefined ? rupiah + "," + split[1] : rupiah;
+      return prefix == undefined ? rupiah : rupiah ? "Rp. " + rupiah : "";
+    },
+    changePage: function changePage(status) {
+      if (status == "next") {
+        this.current_page += 1;
+      } else if (status == "prev") {
+        this.current_page -= 1;
+      }
+
+      this.loadData();
+    },
+    loadData: function () {
+      var _loadData = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee() {
         var _this = this;
 
-        var page,
-            _args = arguments;
+        var current_page;
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
-                page = _args.length > 0 && _args[0] !== undefined ? _args[0] : 1;
                 this.isBusy = true;
+                current_page = this.search == "" ? this.current_page : 1;
                 _context.next = 4;
-                return axios__WEBPACK_IMPORTED_MODULE_3___default().get(this.path_produk, {
+                return axios__WEBPACK_IMPORTED_MODULE_2___default().get(this.path_produk, {
                   params: {
                     page: current_page,
                     per_page: this.per_page,
@@ -120,12 +180,16 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
                   //JIKA RESPONSENYA DITERIMA
                   var getData = response.data.data;
+                  _this.items = getData.data;
                   _this.meta = {
                     total: getData.total,
                     current_page: getData.current_page,
                     per_page: getData.per_page,
                     from: getData.from,
-                    to: getData.to
+                    to: getData.to,
+                    prev_page_url: getData.prev_page_url,
+                    next_page_url: getData.next_page_url,
+                    url: response.data.url
                   };
                 }).catch(function (_ref) {
                   var response = _ref.response;
@@ -140,320 +204,20 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         }, _callee, this);
       }));
 
-      function list() {
-        return _list.apply(this, arguments);
+      function loadData() {
+        return _loadData.apply(this, arguments);
       }
 
-      return list;
+      return loadData;
     }(),
-    reloadPage: function reloadPage() {}
+    reloadPage: function reloadPage() {
+      this.loadData();
+    }
   },
   mounted: function mounted() {
-    this.list();
+    this.loadData();
   }
 });
-
-/***/ }),
-
-/***/ "./node_modules/laravel-vue-pagination/dist/laravel-vue-pagination.es.js":
-/*!*******************************************************************************!*\
-  !*** ./node_modules/laravel-vue-pagination/dist/laravel-vue-pagination.es.js ***!
-  \*******************************************************************************/
-/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": function() { return /* binding */ LaravelVuePagination; }
-/* harmony export */ });
-/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm.js");
-
-const _sfc_main$1 = {
-  emits: ["pagination-change-page"],
-  props: {
-    data: {
-      type: Object,
-      default: () => {
-      }
-    },
-    limit: {
-      type: Number,
-      default: 0
-    },
-    showDisabled: {
-      type: Boolean,
-      default: false
-    },
-    size: {
-      type: String,
-      default: "default",
-      validator: (value) => {
-        return ["small", "default", "large"].indexOf(value) !== -1;
-      }
-    },
-    align: {
-      type: String,
-      default: "left",
-      validator: (value) => {
-        return ["left", "center", "right"].indexOf(value) !== -1;
-      }
-    }
-  },
-  computed: {
-    isApiResource() {
-      return !!this.data.meta;
-    },
-    currentPage() {
-      return this.isApiResource ? this.data.meta.current_page : this.data.current_page;
-    },
-    firstPageUrl() {
-      return this.isApiResource ? this.data.links.first : null;
-    },
-    from() {
-      return this.isApiResource ? this.data.meta.from : this.data.from;
-    },
-    lastPage() {
-      return this.isApiResource ? this.data.meta.last_page : this.data.last_page;
-    },
-    lastPageUrl() {
-      return this.isApiResource ? this.data.links.last : null;
-    },
-    nextPageUrl() {
-      return this.isApiResource ? this.data.links.next : this.data.next_page_url;
-    },
-    perPage() {
-      return this.isApiResource ? this.data.meta.per_page : this.data.per_page;
-    },
-    prevPageUrl() {
-      return this.isApiResource ? this.data.links.prev : this.data.prev_page_url;
-    },
-    to() {
-      return this.isApiResource ? this.data.meta.to : this.data.to;
-    },
-    total() {
-      return this.isApiResource ? this.data.meta.total : this.data.total;
-    },
-    pageRange() {
-      if (this.limit === -1) {
-        return 0;
-      }
-      if (this.limit === 0) {
-        return this.lastPage;
-      }
-      var current = this.currentPage;
-      var last = this.lastPage;
-      var delta = this.limit;
-      var left = current - delta;
-      var right = current + delta + 1;
-      var range = [];
-      var pages = [];
-      var l;
-      for (var i = 1; i <= last; i++) {
-        if (i === 1 || i === last || i >= left && i < right) {
-          range.push(i);
-        }
-      }
-      range.forEach(function(i2) {
-        if (l) {
-          if (i2 - l === 2) {
-            pages.push(l + 1);
-          } else if (i2 - l !== 1) {
-            pages.push("...");
-          }
-        }
-        pages.push(i2);
-        l = i2;
-      });
-      return pages;
-    }
-  },
-  methods: {
-    previousPage() {
-      this.selectPage(this.currentPage - 1);
-    },
-    nextPage() {
-      this.selectPage(this.currentPage + 1);
-    },
-    selectPage(page) {
-      if (page === "...") {
-        return;
-      }
-      this.$emit("pagination-change-page", page);
-    }
-  },
-  render() {
-    return this.$slots.default({
-      data: this.data,
-      limit: this.limit,
-      showDisabled: this.showDisabled,
-      size: this.size,
-      align: this.align,
-      computed: {
-        isApiResource: this.isApiResource,
-        currentPage: this.currentPage,
-        firstPageUrl: this.firstPageUrl,
-        from: this.from,
-        lastPage: this.lastPage,
-        lastPageUrl: this.lastPageUrl,
-        nextPageUrl: this.nextPageUrl,
-        perPage: this.perPage,
-        prevPageUrl: this.prevPageUrl,
-        to: this.to,
-        total: this.total,
-        pageRange: this.pageRange
-      },
-      prevButtonEvents: {
-        click: (e) => {
-          e.preventDefault();
-          this.previousPage();
-        }
-      },
-      nextButtonEvents: {
-        click: (e) => {
-          e.preventDefault();
-          this.nextPage();
-        }
-      },
-      pageButtonEvents: (page) => ({
-        click: (e) => {
-          e.preventDefault();
-          this.selectPage(page);
-        }
-      })
-    });
-  }
-};
-var _export_sfc = (sfc, props) => {
-  const target = sfc.__vccOpts || sfc;
-  for (const [key, val] of props) {
-    target[key] = val;
-  }
-  return target;
-};
-const _sfc_main = {
-  inheritAttrs: false,
-  emits: ["pagination-change-page"],
-  components: {
-    RenderlessLaravelVuePagination: _sfc_main$1
-  },
-  props: {
-    data: {
-      type: Object,
-      default: () => {
-      }
-    },
-    limit: {
-      type: Number,
-      default: 0
-    },
-    showDisabled: {
-      type: Boolean,
-      default: false
-    },
-    size: {
-      type: String,
-      default: "default",
-      validator: (value) => {
-        return ["small", "default", "large"].indexOf(value) !== -1;
-      }
-    },
-    align: {
-      type: String,
-      default: "left",
-      validator: (value) => {
-        return ["left", "center", "right"].indexOf(value) !== -1;
-      }
-    }
-  },
-  methods: {
-    onPaginationChangePage(page) {
-      this.$emit("pagination-change-page", page);
-    }
-  }
-};
-const _hoisted_1 = ["tabindex"];
-const _hoisted_2 = /* @__PURE__ */ (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", { "aria-hidden": "true" }, "\xAB", -1);
-const _hoisted_3 = /* @__PURE__ */ (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", { class: "sr-only" }, "Previous", -1);
-const _hoisted_4 = {
-  key: 0,
-  class: "sr-only"
-};
-const _hoisted_5 = ["tabindex"];
-const _hoisted_6 = /* @__PURE__ */ (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", { "aria-hidden": "true" }, "\xBB", -1);
-const _hoisted_7 = /* @__PURE__ */ (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", { class: "sr-only" }, "Next", -1);
-function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
-  const _component_RenderlessLaravelVuePagination = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("RenderlessLaravelVuePagination");
-  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_RenderlessLaravelVuePagination, {
-    data: $props.data,
-    limit: $props.limit,
-    "show-disabled": $props.showDisabled,
-    size: $props.size,
-    align: $props.align,
-    onPaginationChangePage: $options.onPaginationChangePage
-  }, {
-    default: (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)((slotProps) => [
-      slotProps.computed.total > slotProps.computed.perPage ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("ul", (0,vue__WEBPACK_IMPORTED_MODULE_0__.mergeProps)({ key: 0 }, _ctx.$attrs, {
-        class: ["pagination", {
-          "pagination-sm": slotProps.size == "small",
-          "pagination-lg": slotProps.size == "large",
-          "justify-content-center": slotProps.align == "center",
-          "justify-content-end": slotProps.align == "right"
-        }]
-      }), [
-        slotProps.computed.prevPageUrl || slotProps.showDisabled ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("li", {
-          key: 0,
-          class: (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)(["page-item pagination-prev-nav", { "disabled": !slotProps.computed.prevPageUrl }])
-        }, [
-          (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("a", (0,vue__WEBPACK_IMPORTED_MODULE_0__.mergeProps)({
-            class: "page-link",
-            href: "#",
-            "aria-label": "Previous",
-            tabindex: !slotProps.computed.prevPageUrl && -1
-          }, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toHandlers)(slotProps.prevButtonEvents)), [
-            (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderSlot)(_ctx.$slots, "prev-nav", {}, () => [
-              _hoisted_2,
-              _hoisted_3
-            ])
-          ], 16, _hoisted_1)
-        ], 2)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("", true),
-        ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)(slotProps.computed.pageRange, (page, key) => {
-          return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("li", {
-            class: (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)(["page-item pagination-page-nav", { "active": page == slotProps.computed.currentPage }]),
-            key
-          }, [
-            (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("a", (0,vue__WEBPACK_IMPORTED_MODULE_0__.mergeProps)({
-              class: "page-link",
-              href: "#"
-            }, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toHandlers)(slotProps.pageButtonEvents(page))), [
-              (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)((0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(page) + " ", 1),
-              page == slotProps.computed.currentPage ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("span", _hoisted_4, "(current)")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("", true)
-            ], 16)
-          ], 2);
-        }), 128)),
-        slotProps.computed.nextPageUrl || slotProps.showDisabled ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("li", {
-          key: 1,
-          class: (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)(["page-item pagination-next-nav", { "disabled": !slotProps.computed.nextPageUrl }])
-        }, [
-          (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("a", (0,vue__WEBPACK_IMPORTED_MODULE_0__.mergeProps)({
-            class: "page-link",
-            href: "#",
-            "aria-label": "Next",
-            tabindex: !slotProps.computed.nextPageUrl && -1
-          }, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toHandlers)(slotProps.nextButtonEvents)), [
-            (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderSlot)(_ctx.$slots, "next-nav", {}, () => [
-              _hoisted_6,
-              _hoisted_7
-            ])
-          ], 16, _hoisted_5)
-        ], 2)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("", true)
-      ], 16)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("", true)
-    ]),
-    _: 3
-  }, 8, ["data", "limit", "show-disabled", "size", "align", "onPaginationChangePage"]);
-}
-var LaravelVuePagination = /* @__PURE__ */ _export_sfc(_sfc_main, [["render", _sfc_render]]);
-
-
 
 /***/ }),
 
@@ -21978,70 +21742,196 @@ var render = function () {
     { staticClass: "animated fadeIn" },
     [
       _c(
-        "b-card",
+        "b-row",
         [
-          _c("div", { attrs: { slot: "header" }, slot: "header" }, [
-            _vm._v("\n      Transaksi\n      "),
-            _c(
-              "div",
-              {
-                staticClass: "card-header-actions",
-                staticStyle: { height: "21px" },
-              },
-              [
-                _c(
-                  "b-button",
-                  {
-                    attrs: { variant: "success", size: "sm" },
-                    on: { click: _vm.reloadPage },
-                  },
-                  [_c("i", { staticClass: "fa fa-refresh" })]
-                ),
-              ],
-              1
-            ),
-          ]),
+          _c(
+            "b-col",
+            { attrs: { md: "8" } },
+            [
+              _c(
+                "b-card",
+                [
+                  _c("div", { attrs: { slot: "header" }, slot: "header" }, [
+                    _vm._v("\n          Daftar Produk\n          "),
+                    _c(
+                      "div",
+                      {
+                        staticClass: "card-header-actions",
+                        staticStyle: { height: "21px" },
+                      },
+                      [
+                        _c(
+                          "b-button",
+                          {
+                            attrs: { variant: "success", size: "sm" },
+                            on: { click: _vm.reloadPage },
+                          },
+                          [_c("i", { staticClass: "fa fa-refresh" })]
+                        ),
+                      ],
+                      1
+                    ),
+                  ]),
+                  _vm._v(" "),
+                  _vm.items.length > 0 && !_vm.isBusy
+                    ? _c(
+                        "b-row",
+                        _vm._l(_vm.items, function (item, index) {
+                          return _c(
+                            "b-col",
+                            { key: index, attrs: { md: "4", sm: "6" } },
+                            [
+                              _c(
+                                "b-card",
+                                {
+                                  staticClass: "mb-2",
+                                  staticStyle: { "max-width": "20rem" },
+                                  attrs: {
+                                    title: item.nama,
+                                    "img-top": "",
+                                    tag: "article",
+                                  },
+                                },
+                                [
+                                  item.gambar_produk.length > 0
+                                    ? _c("b-card-img", {
+                                        attrs: {
+                                          src:
+                                            _vm.meta.url +
+                                            "/" +
+                                            item.gambar_produk[0].path,
+                                          alt: item.nama,
+                                          height: "100rem",
+                                        },
+                                      })
+                                    : _c("b-card-img", {
+                                        attrs: {
+                                          src: "/images/image-not-found.png",
+                                          alt: item.nama,
+                                          height: "100rem",
+                                        },
+                                      }),
+                                  _vm._v(" "),
+                                  _c("b-card-text", { staticClass: "mb-2" }, [
+                                    _vm._v(
+                                      "\n                " +
+                                        _vm._s(
+                                          _vm.formatRupiah(item.harga, "Rp.")
+                                        ) +
+                                        "\n              "
+                                    ),
+                                  ]),
+                                  _vm._v(" "),
+                                  _c(
+                                    "b-button",
+                                    {
+                                      attrs: {
+                                        block: "",
+                                        type: "button",
+                                        variant: "primary",
+                                      },
+                                    },
+                                    [_vm._v("Pilih Produk")]
+                                  ),
+                                ],
+                                1
+                              ),
+                            ],
+                            1
+                          )
+                        }),
+                        1
+                      )
+                    : _vm.items.length == 0 && !_vm.isBusy
+                    ? _c(
+                        "b-row",
+                        [
+                          _c("b-col", { attrs: { md: "12" } }, [
+                            _c("h6", { staticClass: "text-center" }, [
+                              _vm._v("Produk tidak tersedia"),
+                            ]),
+                          ]),
+                        ],
+                        1
+                      )
+                    : _c(
+                        "b-row",
+                        [
+                          _c(
+                            "b-col",
+                            { staticClass: "center", attrs: { md: "12" } },
+                            [_vm._v(" Silahkan tunggu . . . ")]
+                          ),
+                        ],
+                        1
+                      ),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    { staticClass: "text-center mt-5" },
+                    [
+                      _c(
+                        "b-button",
+                        {
+                          attrs: {
+                            disabled: _vm.meta.prev_page_url == null,
+                            variant: "secondary",
+                          },
+                          on: {
+                            click: function ($event) {
+                              return _vm.changePage("prev")
+                            },
+                          },
+                        },
+                        [_vm._v("Previous")]
+                      ),
+                      _vm._v(" "),
+                      _c("span", { staticClass: "mx-2" }, [
+                        _vm._v(
+                          "Page " +
+                            _vm._s(_vm.meta.current_page) +
+                            " of " +
+                            _vm._s(_vm.meta.total)
+                        ),
+                      ]),
+                      _vm._v(" "),
+                      _c(
+                        "b-button",
+                        {
+                          attrs: {
+                            disabled: _vm.meta.next_page_url == null,
+                            variant: "secondary",
+                          },
+                          on: {
+                            click: function ($event) {
+                              return _vm.changePage("next")
+                            },
+                          },
+                        },
+                        [_vm._v("Next")]
+                      ),
+                    ],
+                    1
+                  ),
+                ],
+                1
+              ),
+            ],
+            1
+          ),
           _vm._v(" "),
-          _c("div", { staticClass: "table-responsive" }, [
-            _c("table", { staticClass: "table table-bordered text-center" }, [
-              _c("thead", [
-                _c("tr", [
-                  _c("th", [_vm._v("ID")]),
-                  _vm._v(" "),
-                  _c("th", [_vm._v("Name")]),
-                  _vm._v(" "),
-                  _c("th", [_vm._v("Email")]),
+          _c(
+            "b-col",
+            { attrs: { md: "4" } },
+            [
+              _c("b-card", [
+                _c("div", { attrs: { slot: "header" }, slot: "header" }, [
+                  _vm._v("Daftar Belanja"),
                 ]),
               ]),
-              _vm._v(" "),
-              _vm.users && _vm.users.data.length > 0
-                ? _c(
-                    "tbody",
-                    _vm._l(_vm.users.data, function (user, index) {
-                      return _c("tr", { key: index }, [
-                        _c("td", [_vm._v(_vm._s(user.id))]),
-                        _vm._v(" "),
-                        _c("td", [_vm._v(_vm._s(user.name))]),
-                        _vm._v(" "),
-                        _c("td", [_vm._v(_vm._s(user.email))]),
-                      ])
-                    }),
-                    0
-                  )
-                : _c("tbody", [
-                    _c("tr", [
-                      _c("td", { attrs: { align: "center", colspan: "3" } }, [
-                        _vm._v("No record found."),
-                      ]),
-                    ]),
-                  ]),
-            ]),
-          ]),
-          _vm._v(" "),
-          _c("pagination", {
-            attrs: { align: "center", data: _vm.users },
-            on: { "pagination-change-page": _vm.list },
-          }),
+            ],
+            1
+          ),
         ],
         1
       ),

@@ -32,7 +32,7 @@ class ProdukController extends Controller
         }
 
         $rows = $posts->paginate(request()->per_page);
-        return response()->json(['status' => 'success', 'data' => $rows, 'url' => url('')], 200);
+        return response()->json(['status' => 'success', 'data' => $rows, 'url' => url('storage')], 200);
     }
 
     /**
