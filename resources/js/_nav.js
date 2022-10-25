@@ -21,14 +21,14 @@ export default {
         },
         {
             name: "Riwayat Transaksi",
-            url: "/panel/riwayat transaksi",
+            url: "/panel/riwayat-transaksi",
             icon: "icon-notebook",
         },
-        {
-            name: "Laporan",
-            url: "/panel/laporan",
-            icon: "icon-printer",
-        },
+        // {
+        //     name: "Laporan",
+        //     url: "/panel/laporan",
+        //     icon: "icon-printer",
+        // },
         {
             title: true,
             name: "Master Data",

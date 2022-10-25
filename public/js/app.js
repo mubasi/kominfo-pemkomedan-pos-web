@@ -2311,6 +2311,11 @@ var KategoriProdukEntry = function KategoriProdukEntry() {
 
 var Transaksi = function Transaksi() {
   return __webpack_require__.e(/*! import() */ "resources_js_views_pages_transaksi_Index_vue").then(__webpack_require__.bind(__webpack_require__, /*! @/views/pages/transaksi/Index */ "./resources/js/views/pages/transaksi/Index.vue"));
+}; //riwayat transaksi
+
+
+var RiwayatTransaksi = function RiwayatTransaksi() {
+  return __webpack_require__.e(/*! import() */ "resources_js_views_pages_riwayat_transaksi_Index_vue").then(__webpack_require__.bind(__webpack_require__, /*! @/views/pages/riwayat_transaksi/Index */ "./resources/js/views/pages/riwayat_transaksi/Index.vue"));
 };
 
 vue__WEBPACK_IMPORTED_MODULE_0__["default"].use(vue_router__WEBPACK_IMPORTED_MODULE_1__["default"]);
@@ -2403,6 +2408,14 @@ vue__WEBPACK_IMPORTED_MODULE_0__["default"].use(vue_router__WEBPACK_IMPORTED_MOD
         auth: true
       },
       component: Transaksi
+    }, {
+      path: 'riwayat-transaksi',
+      name: 'Riwayat Transaksi',
+      meta: {
+        title: "Riwayat Transaksi",
+        auth: true
+      },
+      component: RiwayatTransaksi
     }, {
       path: 'icons',
       redirect: '/icons/font-awesome',
@@ -79290,7 +79303,7 @@ module.exports = JSON.parse('{"name":"axios","version":"0.21.4","description":"P
 /******/ 		// This function allow to reference async chunks
 /******/ 		__webpack_require__.u = function(chunkId) {
 /******/ 			// return url for filenames not based on template
-/******/ 			if ({"resources_js_containers_DefaultContainer_vue":1,"resources_js_views_icons_Flags_vue":1,"resources_js_views_icons_FontAwesome_vue":1,"resources_js_views_icons_SimpleLineIcons_vue":1,"resources_js_views_icons_CoreUIIcons_vue":1,"resources_js_views_pages_Page404_vue":1,"resources_js_views_pages_Page500_vue":1,"resources_js_views_pages_Login_vue":1,"resources_js_views_pages_Register_vue":1,"resources_js_views_Dashboard_vue":1,"resources_js_views_pages_pengguna_Index_vue":1,"resources_js_views_pages_pengguna_Entry_vue":1,"resources_js_views_pages_produk_Index_vue":1,"resources_js_views_pages_produk_Entry_vue":1,"resources_js_views_pages_kategori_produk_Index_vue":1,"resources_js_views_pages_kategori_produk_Entry_vue":1,"resources_js_views_pages_transaksi_Index_vue":1}[chunkId]) return "js/" + chunkId + ".js";
+/******/ 			if ({"resources_js_containers_DefaultContainer_vue":1,"resources_js_views_icons_Flags_vue":1,"resources_js_views_icons_FontAwesome_vue":1,"resources_js_views_icons_SimpleLineIcons_vue":1,"resources_js_views_icons_CoreUIIcons_vue":1,"resources_js_views_pages_Page404_vue":1,"resources_js_views_pages_Page500_vue":1,"resources_js_views_pages_Login_vue":1,"resources_js_views_pages_Register_vue":1,"resources_js_views_Dashboard_vue":1,"resources_js_views_pages_pengguna_Index_vue":1,"resources_js_views_pages_pengguna_Entry_vue":1,"resources_js_views_pages_produk_Index_vue":1,"resources_js_views_pages_produk_Entry_vue":1,"resources_js_views_pages_kategori_produk_Index_vue":1,"resources_js_views_pages_kategori_produk_Entry_vue":1,"resources_js_views_pages_transaksi_Index_vue":1,"resources_js_views_pages_riwayat_transaksi_Index_vue":1}[chunkId]) return "js/" + chunkId + ".js";
 /******/ 			// return url for filenames based on template
 /******/ 			return undefined;
 /******/ 		};

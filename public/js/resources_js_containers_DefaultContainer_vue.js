@@ -3496,13 +3496,14 @@ __webpack_require__.r(__webpack_exports__);
     icon: "icon-note"
   }, {
     name: "Riwayat Transaksi",
-    url: "/panel/riwayat transaksi",
+    url: "/panel/riwayat-transaksi",
     icon: "icon-notebook"
-  }, {
-    name: "Laporan",
-    url: "/panel/laporan",
-    icon: "icon-printer"
-  }, {
+  }, // {
+  //     name: "Laporan",
+  //     url: "/panel/laporan",
+  //     icon: "icon-printer",
+  // },
+  {
     title: true,
     name: "Master Data",
     class: "",

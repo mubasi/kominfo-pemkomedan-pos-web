@@ -4,6 +4,7 @@ use App\Http\Controllers\API\Pengguna\PenggunaController;
 use App\Http\Controllers\API\Produk\KategoriProdukController;
 use App\Http\Controllers\API\Produk\ProdukController;
 use App\Http\Controllers\API\Produk\ProdukGambarController;
+use App\Http\Controllers\API\Transaksi\TransaksiController;
 use App\Http\Controllers\Auth\AuthController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -57,6 +58,12 @@ Route::group(
          */
         Route::get('/kategori-produk/getoption', [KategoriProdukController::class, 'getoption']);
         Route::apiResource('/kategori-produk', KategoriProdukController::class);
+
+        /**
+         * transaksi
+         */
+        Route::post('/transaksi', [TransaksiController::class, 'store']);
+        Route::get('/riwayat-transaksi', [TransaksiController::class, 'riwayatTransaksi']);
     }
 );
 

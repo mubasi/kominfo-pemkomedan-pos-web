@@ -34,6 +34,9 @@ const KategoriProdukEntry = () => import('@/views/pages/kategori_produk/Entry')
 //transaksi
 const Transaksi = () => import('@/views/pages/transaksi/Index')
 
+//riwayat transaksi
+const RiwayatTransaksi = () => import('@/views/pages/riwayat_transaksi/Index')
+
 
 Vue.use(Router)
 
@@ -132,6 +135,15 @@ export default new Router({
               auth: true,
           },
           component: Transaksi
+        },
+        {
+          path: 'riwayat-transaksi',
+          name: 'Riwayat Transaksi',
+          meta: {
+              title: "Riwayat Transaksi",
+              auth: true,
+          },
+          component: RiwayatTransaksi
         },
         {
           path: 'icons',

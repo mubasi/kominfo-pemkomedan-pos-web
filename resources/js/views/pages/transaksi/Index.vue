@@ -1,7 +1,7 @@
 <template>
   <div class="animated fadeIn">
     <b-row>
-      <b-col md="8">
+      <b-col md="7">
         <b-card>
           <div slot="header">
             Daftar Produk
@@ -42,7 +42,9 @@
               <b-form-row class="mb-1">
                 <b-col md="12">
                   <label class="mt-1">#</label>
-                  <b-button variant="primary" @click="reloadPage" block>Cari</b-button>
+                  <b-button variant="primary" @click="reloadPage" block
+                    >Cari</b-button
+                  >
                 </b-col>
               </b-form-row>
             </b-col>
@@ -77,7 +79,11 @@
                   {{ formatRupiah(item.harga, "Rp.") }}
                 </b-card-text>
 
-                <b-button block type="button" variant="primary"
+                <b-button
+                  @click="setDaftarBelanja(item)"
+                  block
+                  type="button"
+                  variant="primary"
                   >Pilih Produk</b-button
                 >
               </b-card>
@@ -110,12 +116,125 @@
           </div>
         </b-card>
       </b-col>
-      <b-col md="4">
+      <b-col md="5">
         <b-card>
-          <div slot="header">Daftar Belanja</div>
+          <div slot="header">
+            Daftar Belanja
+            <div class="card-header-actions" style="height: 21px">
+              <b-button variant="danger" size="sm" @click="resetDaftarBelanja">
+                <i class="fa fa-trash-o"
+              /></b-button>
+            </div>
+          </div>
+          <table class="table table-sm table-striped table-borderless">
+            <tr>
+              <td align="right">NO</td>
+              <td>Nama Barang</td>
+              <td align="right">Qty</td>
+              <td align="right">Jumlah</td>
+              <td>#</td>
+            </tr>
+            <tbody v-if="daftar_belanja.length > 0 && !isLoading">
+              <tr v-for="(item, index) in daftar_belanja" :key="index">
+                <td align="right">
+                  {{ index + 1 }}
+                </td>
+                <td>
+                  {{ item.nama }}
+                </td>
+                <td align="right">{{ item.qty }}</td>
+                <td align="right">
+                  {{ formatRupiah(item.jumlah, "Rp.") }}
+                </td>
+                <td>
+                  <b-button
+                    variant="success"
+                    size="sm"
+                    @click="editDaftarBelanja(index)"
+                  >
+                    <i class="fa fa-edit"></i
+                  ></b-button>
+                  <b-button
+                    variant="danger"
+                    size="sm"
+                    @click="deleteDaftarBelanja(index)"
+                  >
+                    <i class="fa fa-trash-o"></i
+                  ></b-button>
+                </td>
+              </tr>
+              <tr>
+                <td colspan="3" align="right">Total</td>
+                <td align="right">
+                  {{ totalHargaBelanja() }}
+                </td>
+                <td></td>
+              </tr>
+            </tbody>
+            <tbody v-else-if="daftar_belanja.length == 0 && isLoading">
+              <tr>
+                <td colspan="5" class="text-center">
+                  <strong> Silahkan tunggu . . . </strong>
+                </td>
+              </tr>
+            </tbody>
+            <tbody v-else>
+              <tr>
+                <td colspan="5" class="text-center">
+                  <strong> Belum ada daftar belanja </strong>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <table
+            class="table table-sm"
+            v-if="daftar_belanja.length > 0 && !isLoading"
+          >
+            <tr>
+              <td colspan="5" class="mt-5">
+                <b-form-input
+                  v-model="nama_pelanggan"
+                  placeholder="Nama Pelanggan"
+                ></b-form-input>
+                <b-form-input
+                  class="mt-1"
+                  v-model="no_hp_pelangan"
+                  placeholder="No HP Pelanggan"
+                ></b-form-input>
+                <b-button
+                  class="mt-3"
+                  block
+                  variant="primary"
+                  @click="saveTransaksi()"
+                  >Bayar</b-button
+                >
+              </td>
+            </tr>
+          </table>
         </b-card>
       </b-col>
     </b-row>
+
+    <b-modal ref="md-change-qty" hide-footer centered size="sm" title="">
+      <h5 class="text-center">
+        {{ detail_belanja.nama }}
+      </h5>
+      <hr />
+      <div class="text-center">
+        <b-button variant="secondary" size="sm" @click="statusQty('minus')">
+          <i class="fa fa-minus"></i>
+        </b-button>
+        <span class="mx-5"> {{ detail_belanja.qty }} </span>
+        <b-button variant="secondary" size="sm" @click="statusQty('plus')">
+          <i class="fa fa-plus"></i>
+        </b-button>
+      </div>
+      <div class="mt-3">
+        <b-button block size="sm" variant="success" @click="saveDetailBelanja()"
+          >Simpan</b-button
+        >
+      </div>
+    </b-modal>
   </div>
 </template>
 
@@ -127,13 +246,28 @@ export default {
   components: {},
   data: function () {
     return {
-      path: "/api/transaksi",
+      path_transaksi: "/api/transaksi",
       path_kategori_produk: "/api/kategori-produk/getoption",
       path_produk: "/api/produk",
-      options_kategori: [{
-        value: 0,
-        text: 'Semua'
-      }],
+      options_kategori: [
+        {
+          value: 0,
+          text: "Semua",
+        },
+      ],
+      daftar_belanja: [],
+      nama_pelanggan: "",
+      no_hp_pelangan: "",
+      detail_belanja: {
+        index: 0,
+        id: -1,
+        nama: "",
+        harga: 0,
+        hpp: 0,
+        qty: 0,
+        jumlah_modal: 0,
+        jumlah: 0,
+      },
       items: [],
       meta: [], //JUGA BERLAKU UNTUK META
       current_page: 1, //DEFAULT PAGE YANG AKTIF ADA PAGE 1
@@ -143,9 +277,163 @@ export default {
       sortByDesc: false, //ASCEDING
       kategori: 0,
       isBusy: false,
+      isLoading: false,
     };
   },
   methods: {
+    saveTransaksi() {
+      const self = this;
+
+      self.$swal({
+        title: "Silahkan Tunggu . . .",
+        showConfirmButton: false,
+        allowOutsideClick: false,
+        onBeforeOpen: () => {
+          self.$swal.showLoading();
+        },
+      });
+
+      let totalHarga = 0;
+      let totalModal = 0;
+
+      self.daftar_belanja.forEach((element) => {
+        totalHarga += element.jumlah;
+        totalModal += element.jumlah_modal;
+      });
+
+      axios
+        .post(self.path_transaksi, {
+          nama_pelanggan: self.nama_pelanggan,
+          no_hp_pelanggan: self.no_hp_pelangan,
+          total_harga: totalHarga,
+          total_modal: totalModal,
+          transaksi: self.daftar_belanja,
+        })
+        .then(function (response) {
+          self.$swal.close();
+          self
+            .$swal({
+              title: "Data Berhasil Disimpan",
+              icon: "success",
+              confirmButtonColor: "#3085d6",
+              allowOutsideClick: false,
+            })
+            .then((result) => {
+              if (result.value) {
+                // self.$route
+                self.resetDaftarBelanja();
+                self.$swal.close();
+              }
+            });
+        })
+        .catch(function (error) {
+          // console.log(error.response);
+          if (error.response) {
+            self.$swal.close();
+            self.$swal({
+              icon: "error",
+              title: "Silahkan coba lagi",
+              allowOutsideClick: false,
+            });
+            // if (error.response.data) {
+            //   this.errors = error.response.data;
+            // }
+          }
+        });
+    },
+    saveDetailBelanja() {
+      this.isLoading = true;
+      let tempAllDaftarBelanja = this.daftar_belanja;
+      this.resetDaftarBelanja();
+      let harga = this.detail_belanja.qty * this.detail_belanja.harga;
+      let jumlahModal = this.detail_belanja.qty * this.detail_belanja.hpp;
+      let tempBelanja = {
+        id: this.detail_belanja.id,
+        nama: this.detail_belanja.nama,
+        harga: this.detail_belanja.harga,
+        hpp: this.detail_belanja.hpp,
+        qty: this.detail_belanja.qty,
+        jumlah_modal: jumlahModal,
+        jumlah: harga,
+      };
+      tempAllDaftarBelanja[this.detail_belanja.index] = tempBelanja;
+      this.daftar_belanja = tempAllDaftarBelanja;
+      this.isLoading = false;
+      this.$refs["md-change-qty"].hide();
+    },
+    statusQty(status) {
+      if (status == "plus") {
+        this.detail_belanja.qty += 1;
+      } else if (status == "minus") {
+        if (this.detail_belanja.qty > 1) {
+          this.detail_belanja.qty -= 1;
+        }
+      }
+    },
+    editDaftarBelanja(index) {
+      let tempBelanja = this.daftar_belanja[index];
+      this.detail_belanja = {
+        index: index,
+        id: tempBelanja.id,
+        nama: tempBelanja.nama,
+        harga: tempBelanja.harga,
+        hpp: tempBelanja.hpp,
+        qty: tempBelanja.qty,
+        jumlah_modal: tempBelanja.jumlah_modal,
+        jumlah: tempBelanja.jumlah,
+      };
+      this.$refs["md-change-qty"].show();
+    },
+    deleteDaftarBelanja(index) {
+      this.daftar_belanja.splice(index, 1);
+    },
+    totalHargaBelanja() {
+      let tempTotal = 0;
+      this.daftar_belanja.forEach((element) => {
+        tempTotal += element.jumlah;
+      });
+      return this.formatRupiah(tempTotal, "Rp.");
+    },
+    resetDaftarBelanja() {
+      this.daftar_belanja = [];
+    },
+    setDaftarBelanja(item) {
+      this.isLoading = true;
+      let tempAllDaftarBelanja = this.daftar_belanja;
+      this.resetDaftarBelanja();
+      var index = tempAllDaftarBelanja.findIndex(function (temp) {
+        return temp.id == item.id;
+      });
+      if (index == -1) {
+        let tempDaftarBelanja = {
+          id: item.id,
+          nama: item.nama,
+          harga: item.harga,
+          hpp: item.hpp,
+          qty: 1,
+          jumlah_modal: 1 * item.hpp,
+          jumlah: 1 * item.harga,
+        };
+        tempAllDaftarBelanja.push(tempDaftarBelanja);
+      } else {
+        let tempDaftarBelanja = tempAllDaftarBelanja[index];
+        let qty = tempDaftarBelanja.qty + 1;
+        let jumlah = qty * tempDaftarBelanja.harga;
+        let jumlah_modal = qty * tempDaftarBelanja.hpp;
+        let saveDaftarBelanja = {
+          id: item.id,
+          nama: item.nama,
+          harga: item.harga,
+          hpp: item.hpp,
+          qty: qty,
+          jumlah_modal: jumlah_modal,
+          jumlah: jumlah,
+        };
+        tempAllDaftarBelanja[index] = saveDaftarBelanja;
+      }
+      this.daftar_belanja = tempAllDaftarBelanja;
+      this.isLoading = false;
+    },
     patchKategori() {
       axios
         .get(this.path_kategori_produk)
@@ -162,20 +450,9 @@ export default {
     },
     /* Fungsi formatRupiah */
     formatRupiah(angka, prefix) {
-      var number_string = angka.replace(/[^,\d]/g, "").toString(),
-        split = number_string.split(","),
-        sisa = split[0].length % 3,
-        rupiah = split[0].substr(0, sisa),
-        ribuan = split[0].substr(sisa).match(/\d{3}/gi);
-
-      // tambahkan titik jika yang di input sudah menjadi angka ribuan
-      if (ribuan) {
-        let separator = sisa ? "." : "";
-        rupiah += separator + ribuan.join(".");
-      }
-
-      rupiah = split[1] != undefined ? rupiah + "," + split[1] : rupiah;
-      return prefix == undefined ? rupiah : rupiah ? "Rp. " + rupiah : "";
+      return (
+        prefix + angka.toString().replace(/(\d)(?=(\d{3})+(?:\.\d+)?$)/g, "$1.")
+      );
     },
     changePage(status) {
       if (status == "next") {

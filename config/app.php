@@ -176,9 +176,14 @@ return [
         App\Providers\RouteServiceProvider::class,
 
         /**
-         * Spatie 
+         * Spatie
          */
         Spatie\Permission\PermissionServiceProvider::class,
+
+        /**
+         * generate autonumber
+         */
+        Alfa6661\AutoNumber\AutoNumberServiceProvider::class,
 
     ],
 
