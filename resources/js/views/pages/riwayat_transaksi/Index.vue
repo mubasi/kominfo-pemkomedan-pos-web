@@ -5,8 +5,8 @@
         Pengguna
         <div class="card-header-actions" style="height: 21px">
           <b-button variant="success" size="sm" @click="reloadPage">
-            <i class="fa fa-refresh"
-          /></b-button>
+            <i class="fa fa-refresh" />
+          </b-button>
           <!-- <router-link :to="'/panel/master-data/pengguna/add'" class="btn btn-sm btn-primary"><i
                             class="fa fa-edit" /> Entry Data</router-link> -->
         </div>
@@ -14,37 +14,21 @@
       <b-row>
         <b-col md="5">
           <label>Tanggal Mulai</label>
-          <b-form-input
-            v-model="start_date"
-            type="date"
-          ></b-form-input>
+          <b-form-input v-model="start_date" type="date"></b-form-input>
         </b-col>
         <b-col md="5">
           <label>Tanggal Akhir</label>
-          <b-form-input
-            v-model="end_date"
-            type="date"
-          ></b-form-input>
+          <b-form-input v-model="end_date" type="date"></b-form-input>
         </b-col>
         <b-col>
-            <label>#</label> <br>
-            <b-button block variant="success" @click="reloadPage">Proses</b-button>
+          <label>#</label> <br>
+          <b-button block variant="success" @click="reloadPage">Proses</b-button>
         </b-col>
       </b-row>
       <hr />
-      <app-datatable
-        v-if="fields"
-        :editUrl="'/panel/master-data/pengguna/'"
-        :deleteData="deleteRow"
-        :isBusy="isBusy"
-        :items="items"
-        :fields="fields"
-        :meta="meta"
-        @per_page="handlePerPage"
-        @pagination="handlePagination"
-        @search="handleSearch"
-        @sort="handleSort"
-      />
+      <app-datatable v-if="fields" :editUrl="'/panel/master-data/pengguna/'" :deleteData="deleteRow" :isBusy="isBusy"
+        :items="items" :fields="fields" :meta="meta" :formatRupiah="formatRupiah" @per_page="handlePerPage"
+        @pagination="handlePagination" @search="handleSearch" @sort="handleSort" />
       <div class="text-center" v-else>
         <b-spinner variant="success" label="Spinning"></b-spinner>
         <br />
@@ -55,6 +39,7 @@
 </template>
 
 <script>
+var numeral = require("numeral");
 import moment from "moment";
 import Datatable from "./TableInfo.vue"; //IMPORT COMPONENT DATATABLENYA
 import axios from "axios"; //IMPORT AXIOS
@@ -86,7 +71,7 @@ export default {
           sortable: true,
         },
         {
-          key: "nama",
+          key: "nama_pembeli",
           label: "Nama",
           formatter: (value, key, item) => {
             return value == null ? "-" : value;
@@ -138,20 +123,8 @@ export default {
   methods: {
     /* Fungsi formatRupiah */
     formatRupiah(angka, prefix) {
-      var number_string = angka.replace(/[^,\d]/g, "").toString(),
-        split = number_string.split(","),
-        sisa = split[0].length % 3,
-        rupiah = split[0].substr(0, sisa),
-        ribuan = split[0].substr(sisa).match(/\d{3}/gi);
-
-      // tambahkan titik jika yang di input sudah menjadi angka ribuan
-      if (ribuan) {
-        let separator = sisa ? "." : "";
-        rupiah += separator + ribuan.join(".");
-      }
-
-      rupiah = split[1] != undefined ? rupiah + "," + split[1] : rupiah;
-      return prefix == undefined ? rupiah : rupiah ? "Rp. " + rupiah : "";
+      let result = numeral(angka).format("0,0");
+      return "" + prefix + " " + result;
     },
     formatDate(value) {
       if (value) {
