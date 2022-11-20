@@ -141,5 +141,10 @@ class ProdukController extends Controller
     public function destroy($id)
     {
         //
+        $rowItem = Produk::where('id', $id);
+        $rowItem->delete();
+
+        
+        return response()->json(['status' =>  true, 'data' => $rowItem]);
     }
 }

@@ -23,8 +23,8 @@
       </div>
     </div>
     <div class="col-md-12">
-      <b-table striped hover :items="items" :busy="isBusy" :fields="fields" :sort-by.sync="sortBy"
-        :sort-desc.sync="sortDesc" show-empty>
+      <b-table striped hover :formatRupiah="formatRupiah" :items="items" :busy="isBusy" :fields="fields"
+        :sort-by.sync="sortBy" :sort-desc.sync="sortDesc" show-empty foot-clone>
         <template #table-busy>
           <div class="text-center text-danger my-2">
             <b-spinner class="align-middle"></b-spinner>
@@ -46,9 +46,25 @@
           <span v-html="row.value"></span>
         </template>
 
+        <template slot="FOOT_total_harga" slot-scope="scope">
+          {{ "Rp." + totalHarga() }}
+        </template>
+
+        <template slot="FOOT_total_modal" slot-scope="scope">
+          {{ "Rp." + totalModal() }}
+        </template>
+
+        <!-- <template #footer>
+          <th colspan="5">
+            Total
+          </th>
+          <th>dasdsad</th>
+          <th>adasdsad</th>
+        </template> -->
+
         <!-- <template slot="actions" slot-scope="row"> -->
-          <!-- <a href="http://" class="btn btn-sm btn-success mr-1"><i class="fa fa-edit"></i></a> -->
-          <!-- <router-link :to="editUrl+row.item.id" class="btn btn-sm btn-success">
+        <!-- <a href="http://" class="btn btn-sm btn-success mr-1"><i class="fa fa-edit"></i></a> -->
+        <!-- <router-link :to="editUrl+row.item.id" class="btn btn-sm btn-success">
             <i class="fa fa-edit"></i>
           </router-link>
           <b-button variant="danger" @click="deleteData(row.item.id)" class="ml-1" size="sm">
@@ -72,6 +88,7 @@
 <script>
 import _ from 'lodash' //IMPORT LODASH, DIMANA AKAN DIGUNAKAN UNTUK MEMBUAT DELAY KETIKA KOLOM PENCARIAN DIISI
 
+var numeral = require("numeral");
 export default {
   //PROPS INI ADALAH DATA YANG AKAN DIMINTA DARI PENGGUNA COMPONENT DATATABLE YANG KITA BUAT
   props: {
@@ -104,6 +121,10 @@ export default {
     deleteData: {
       type: Function,
       require: true
+    },
+    formatRupiah: {
+      type: Function,
+      require: true
     }
   },
   data() {
@@ -112,7 +133,8 @@ export default {
       sortBy: null, //FIELD YANG AKAN DISORT AKAN OTOMATIS DISIMPAN DISINI
       sortDesc: false, //SEDANGKAN JENISNYA ASCENDING ATAU DESC AKAN DISIMPAN DISINI
       deleteModal: false,
-      selected: null
+      selected: null,
+      visibleRows: []
     }
   },
   watch: {
@@ -153,6 +175,22 @@ export default {
       //KIRIM EMIT DENGAN NAMA SEARCH DAN VALUE SESUAI YANG DIKETIKKAN OLEH USER
       this.$emit('search', e.target.value)
     }, 500),
+    totalModal() {
+      return this.items.reduce((accum, item) => {
+        let tempResult = parseInt(accum) + parseInt(item.total_modal);
+        return tempResult;//numeral(tempResult).format("0,0");
+      }, 0.0)
+    },
+    totalHarga() {
+      return this.items.reduce((accum, item) => {
+        let tempResult = parseInt(accum) + parseInt(item.total_harga);
+        return tempResult;//numeral(tempResult).format("0,0");
+      }, 0.0)
+    },
+    formatData(angka, prefix) {
+      let result = numeral(angka).format("0,0");
+      return "" + prefix + " " + result;
+    },
   }
 }
 </script>
