@@ -54,23 +54,15 @@
           {{ "Rp." + totalModal() }}
         </template>
 
-        <!-- <template #footer>
-          <th colspan="5">
-            Total
-          </th>
-          <th>dasdsad</th>
-          <th>adasdsad</th>
-        </template> -->
-
-        <!-- <template slot="actions" slot-scope="row"> -->
-        <!-- <a href="http://" class="btn btn-sm btn-success mr-1"><i class="fa fa-edit"></i></a> -->
-        <!-- <router-link :to="editUrl+row.item.id" class="btn btn-sm btn-success">
-            <i class="fa fa-edit"></i>
-          </router-link>
-          <b-button variant="danger" @click="deleteData(row.item.id)" class="ml-1" size="sm">
-            <i class="icon-trash"></i>
+  
+        <template slot="actions" slot-scope="row">
+          <b-button title="Kirim Email" variant="primary" @click="printBelanja('email', row.item.id)" class="ml-1" size="sm">
+            <i class="icon-envelope"></i>
           </b-button>
-        </template> -->
+          <b-button title="Cetak Struk" variant="success" @click="printBelanja('print', row.item.id)" class="ml-1" size="sm">
+            <i class="icon-printer"></i>
+          </b-button>
+        </template>
       </b-table>
     </div>
 
@@ -118,7 +110,7 @@ export default {
       type: Boolean,
       required: true
     },
-    deleteData: {
+    printBelanja: {
       type: Function,
       require: true
     },

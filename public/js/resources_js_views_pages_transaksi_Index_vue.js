@@ -260,6 +260,70 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
  //IMPORT AXIOS
 
@@ -276,8 +340,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         text: "Semua"
       }],
       daftar_belanja: [],
+      id_transaksi: 0,
       nama_pelanggan: "",
       no_hp_pelangan: "",
+      email_hp_pelanggan: "",
       detail_belanja: {
         index: 0,
         id: -1,
@@ -325,23 +391,17 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       axios__WEBPACK_IMPORTED_MODULE_2___default().post(self.path_transaksi, {
         nama_pelanggan: self.nama_pelanggan,
         no_hp_pelanggan: self.no_hp_pelangan,
+        email_hp_pelanggan: self.email_hp_pelanggan,
         total_harga: totalHarga,
         total_modal: totalModal,
         transaksi: self.daftar_belanja
       }).then(function (response) {
+        var getData = response.data.data;
+        console.log(getData);
+        self.id_transaksi = getData.id;
         self.$swal.close();
-        self.$swal({
-          title: "Data Berhasil Disimpan",
-          icon: "success",
-          confirmButtonColor: "#3085d6",
-          allowOutsideClick: false
-        }).then(function (result) {
-          if (result.value) {
-            // self.$route
-            self.resetDaftarBelanja();
-            self.$swal.close();
-          }
-        });
+        self.resetDaftarBelanja();
+        self.$refs["md-finsih-transaction"].show();
       }).catch(function (error) {
         // console.log(error.response);
         if (error.response) {
@@ -355,6 +415,50 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           // }
         }
       });
+    },
+    printBelanja: function printBelanja(status) {
+      var _this = this;
+
+      this.resetDaftarBelanja();
+
+      if (status == "print" && this.id_transaksi != 0) {
+        window.open("/api/transaksi/stuck/print/" + this.id_transaksi, "_blank");
+      } else if (this.id_transaksi != 0) {
+        this.$swal({
+          title: "Silahkan Tunggu . . .",
+          showConfirmButton: false,
+          allowOutsideClick: false,
+          onBeforeOpen: function onBeforeOpen() {
+            _this.$swal.showLoading();
+          }
+        });
+        axios__WEBPACK_IMPORTED_MODULE_2___default().get("/api/transaksi/stuck/sendmail/" + this.id_transaksi).then(function (response) {
+          _this.$swal({
+            title: "Email Berhasil Dikirim",
+            icon: "success",
+            confirmButtonColor: "#3085d6",
+            allowOutsideClick: false
+          }).then(function (result) {
+            if (result.value) {// self.$route
+              // this.$router.go('/galery');
+            }
+          });
+        }).catch(function (error) {
+          // console.log(error.response);
+          _this.$swal({
+            type: "error",
+            title: error.response.data.msg,
+            allowOutsideClick: false
+          });
+        });
+      } else {
+        self.$refs["md-finsih-transaction"].hide();
+        this.$swal({
+          type: "Gagal kirim emai/cetak struk belanja",
+          title: "Silahkan lakukan kirim email/cetak struk di riwayat transaksi",
+          allowOutsideClick: false
+        });
+      }
     },
     saveDetailBelanja: function saveDetailBelanja() {
       this.isLoading = true;
@@ -452,12 +556,12 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       this.isLoading = false;
     },
     patchKategori: function patchKategori() {
-      var _this = this;
+      var _this2 = this;
 
       axios__WEBPACK_IMPORTED_MODULE_2___default().get(this.path_kategori_produk).then(function (response) {
         var data = response.data.data;
         data.forEach(function (element) {
-          _this.options_kategori.push({
+          _this2.options_kategori.push({
             value: element.id,
             text: element.nama
           });
@@ -480,7 +584,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     },
     loadData: function () {
       var _loadData = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee() {
-        var _this2 = this;
+        var _this3 = this;
 
         var current_page;
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee$(_context) {
@@ -500,12 +604,12 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                     sortbydesc: this.sortByDesc ? "DESC" : "ASC"
                   }
                 }).then(function (response) {
-                  _this2.isBusy = false; //JIKA RESPONSENYA DITERIMA
+                  _this3.isBusy = false; //JIKA RESPONSENYA DITERIMA
 
                   //JIKA RESPONSENYA DITERIMA
                   var getData = response.data.data;
-                  _this2.items = getData.data;
-                  _this2.meta = {
+                  _this3.items = getData.data;
+                  _this3.meta = {
                     total: getData.total,
                     current_page: getData.current_page,
                     per_page: getData.per_page,
@@ -22077,7 +22181,9 @@ var render = function () {
                 "b-card",
                 [
                   _c("div", { attrs: { slot: "header" }, slot: "header" }, [
-                    _vm._v("\n          Daftar Produk\n          "),
+                    _vm._v(
+                      "\n                    Daftar Produk\n                    "
+                    ),
                     _c(
                       "div",
                       {
@@ -22257,11 +22363,11 @@ var render = function () {
                                   _vm._v(" "),
                                   _c("b-card-text", { staticClass: "mb-2" }, [
                                     _vm._v(
-                                      "\n                " +
+                                      "\n                                " +
                                         _vm._s(
                                           _vm.formatRupiah(item.harga, "Rp.")
                                         ) +
-                                        "\n              "
+                                        "\n                            "
                                     ),
                                   ]),
                                   _vm._v(" "),
@@ -22308,7 +22414,11 @@ var render = function () {
                           _c(
                             "b-col",
                             { staticClass: "center", attrs: { md: "12" } },
-                            [_vm._v(" Silahkan tunggu . . . ")]
+                            [
+                              _vm._v(
+                                "\n                        Silahkan tunggu . . .\n                    "
+                              ),
+                            ]
                           ),
                         ],
                         1
@@ -22338,7 +22448,7 @@ var render = function () {
                         _vm._v(
                           "Page " +
                             _vm._s(_vm.meta.current_page) +
-                            " of " +
+                            " of\n                        " +
                             _vm._s(_vm.meta.total)
                         ),
                       ]),
@@ -22374,7 +22484,9 @@ var render = function () {
             [
               _c("b-card", [
                 _c("div", { attrs: { slot: "header" }, slot: "header" }, [
-                  _vm._v("\n          Daftar Belanja\n          "),
+                  _vm._v(
+                    "\n                    Daftar Belanja\n                    "
+                  ),
                   _c(
                     "div",
                     {
@@ -22424,17 +22536,17 @@ var render = function () {
                               return _c("tr", { key: index }, [
                                 _c("td", { attrs: { align: "right" } }, [
                                   _vm._v(
-                                    "\n                " +
+                                    "\n                                " +
                                       _vm._s(index + 1) +
-                                      "\n              "
+                                      "\n                            "
                                   ),
                                 ]),
                                 _vm._v(" "),
                                 _c("td", [
                                   _vm._v(
-                                    "\n                " +
+                                    "\n                                " +
                                       _vm._s(item.nama) +
-                                      "\n              "
+                                      "\n                            "
                                   ),
                                 ]),
                                 _vm._v(" "),
@@ -22444,11 +22556,11 @@ var render = function () {
                                 _vm._v(" "),
                                 _c("td", { attrs: { align: "right" } }, [
                                   _vm._v(
-                                    "\n                " +
+                                    "\n                                " +
                                       _vm._s(
                                         _vm.formatRupiah(item.jumlah, "Rp.")
                                       ) +
-                                      "\n              "
+                                      "\n                            "
                                   ),
                                 ]),
                                 _vm._v(" "),
@@ -22507,9 +22619,9 @@ var render = function () {
                               _vm._v(" "),
                               _c("td", { attrs: { align: "right" } }, [
                                 _vm._v(
-                                  "\n                " +
+                                  "\n                                " +
                                     _vm._s(_vm.totalHargaBelanja()) +
-                                    "\n              "
+                                    "\n                            "
                                 ),
                               ]),
                               _vm._v(" "),
@@ -22584,6 +22696,18 @@ var render = function () {
                               },
                             }),
                             _vm._v(" "),
+                            _c("b-form-input", {
+                              staticClass: "mt-1",
+                              attrs: { placeholder: "Email Pelanggan" },
+                              model: {
+                                value: _vm.email_hp_pelanggan,
+                                callback: function ($$v) {
+                                  _vm.email_hp_pelanggan = $$v
+                                },
+                                expression: "email_hp_pelanggan",
+                              },
+                            }),
+                            _vm._v(" "),
                             _c(
                               "b-button",
                               {
@@ -22619,7 +22743,9 @@ var render = function () {
         },
         [
           _c("h5", { staticClass: "text-center" }, [
-            _vm._v("\n      " + _vm._s(_vm.detail_belanja.nama) + "\n    "),
+            _vm._v(
+              "\n            " + _vm._s(_vm.detail_belanja.nama) + "\n        "
+            ),
           ]),
           _vm._v(" "),
           _c("hr"),
@@ -22681,6 +22807,50 @@ var render = function () {
             1
           ),
         ]
+      ),
+      _vm._v(" "),
+      _c(
+        "b-modal",
+        {
+          ref: "md-finsih-transaction",
+          attrs: { "hide-footer": "", title: "Transaksi Berhasil" },
+        },
+        [
+          _c("div", { staticClass: "d-block text-center" }, [
+            _c("span", [
+              _vm._v("Silahkan pilih kirim email atau cetak struk belanja"),
+            ]),
+          ]),
+          _vm._v(" "),
+          _c("br"),
+          _vm._v(" "),
+          _c(
+            "b-button",
+            {
+              attrs: { block: "", variant: "primary" },
+              on: {
+                click: function ($event) {
+                  return _vm.printBelanja("email")
+                },
+              },
+            },
+            [_vm._v("Kirim Email")]
+          ),
+          _vm._v(" "),
+          _c(
+            "b-button",
+            {
+              attrs: { block: "", variant: "success" },
+              on: {
+                click: function ($event) {
+                  return _vm.printBelanja("print")
+                },
+              },
+            },
+            [_vm._v("Cetak Struk")]
+          ),
+        ],
+        1
       ),
     ],
     1

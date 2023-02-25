@@ -53,6 +53,22 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 var numeral = __webpack_require__(/*! numeral */ "./node_modules/numeral/numeral.js");
 
 
@@ -114,10 +130,10 @@ var numeral = __webpack_require__(/*! numeral */ "./node_modules/numeral/numeral
           return _this.formatRupiah(value, "Rp.");
         },
         sortable: true
-      } // {
-      //     key: 'actions',
-      //     label: 'Actions'
-      // } //TAMBAHKAN CODE INI
+      }, {
+        key: "actions",
+        label: "Actions"
+      } //TAMBAHKAN CODE INI
       ],
       items: [],
       //DEFAULT VALUE DARI ITEMS ADALAH KOSONG
@@ -168,32 +184,69 @@ var numeral = __webpack_require__(/*! numeral */ "./node_modules/numeral/numeral
         }
       });
     },
-    prosesDelete: function prosesDelete(id) {
+    printBelanja: function printBelanja(status, id) {
       var _this3 = this;
+
+      if (status == "print") {
+        window.open("/api/transaksi/stuck/print/" + id, "_blank");
+      } else {
+        this.$swal({
+          title: "Silahkan Tunggu . . .",
+          showConfirmButton: false,
+          allowOutsideClick: false,
+          onBeforeOpen: function onBeforeOpen() {
+            _this3.$swal.showLoading();
+          }
+        });
+        axios__WEBPACK_IMPORTED_MODULE_2___default().get("/api/transaksi/stuck/sendmail/" + id).then(function (response) {
+          _this3.$swal({
+            title: "Email Berhasil Dikirim",
+            icon: "success",
+            confirmButtonColor: "#3085d6",
+            allowOutsideClick: false
+          }).then(function (result) {
+            if (result.value) {
+              _this3.loadPostsData(); // self.$route
+              // this.$router.go('/galery');
+
+            }
+          });
+        }).catch(function (error) {
+          // console.log(error.response);
+          _this3.$swal({
+            type: "error",
+            title: error.response.data.msg,
+            allowOutsideClick: false
+          });
+        });
+      }
+    },
+    prosesDelete: function prosesDelete(id) {
+      var _this4 = this;
 
       this.$swal({
         title: "Silahkan Tunggu . . .",
         showConfirmButton: false,
         allowOutsideClick: false,
         onBeforeOpen: function onBeforeOpen() {
-          _this3.$swal.showLoading();
+          _this4.$swal.showLoading();
         }
       });
       axios__WEBPACK_IMPORTED_MODULE_2___default()["delete"](this.path + "/" + id).then(function (response) {
-        _this3.$swal({
+        _this4.$swal({
           title: "Data Berhasil Dihapus",
           icon: "success",
           confirmButtonColor: "#3085d6",
           allowOutsideClick: false
         }).then(function (result) {
           if (result.value) {
-            _this3.loadPostsData(); // self.$route
+            _this4.loadPostsData(); // self.$route
             // this.$router.go('/galery');
 
           }
         });
       }).catch(function (error) {
-        _this3.$swal({
+        _this4.$swal({
           type: "error",
           title: "Silahkan Coba Lagi!",
           allowOutsideClick: false
@@ -202,7 +255,7 @@ var numeral = __webpack_require__(/*! numeral */ "./node_modules/numeral/numeral
     },
     //METHOD INI AKAN MENGHANDLE REQUEST DATA KE API
     loadPostsData: function loadPostsData() {
-      var _this4 = this;
+      var _this5 = this;
 
       this.isBusy = true;
       var current_page = this.search == "" ? this.current_page : 1; //LAKUKAN REQUEST KE API UNTUK MENGAMBIL DATA POSTINGAN
@@ -219,13 +272,13 @@ var numeral = __webpack_require__(/*! numeral */ "./node_modules/numeral/numeral
           sortbydesc: this.sortByDesc ? "DESC" : "ASC"
         }
       }).then(function (response) {
-        _this4.isBusy = false; //JIKA RESPONSENYA DITERIMA
+        _this5.isBusy = false; //JIKA RESPONSENYA DITERIMA
 
         var getData = response.data.data;
-        _this4.items = getData.data; //MAKA ASSIGN DATA POSTINGAN KE DALAM VARIABLE ITEMS
+        _this5.items = getData.data; //MAKA ASSIGN DATA POSTINGAN KE DALAM VARIABLE ITEMS
         //DAN ASSIGN INFORMASI LAINNYA KE DALAM VARIABLE META
 
-        _this4.meta = {
+        _this5.meta = {
           total: getData.total,
           current_page: getData.current_page,
           per_page: getData.per_page,
@@ -360,14 +413,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
  //IMPORT LODASH, DIMANA AKAN DIGUNAKAN UNTUK MEMBUAT DELAY KETIKA KOLOM PENCARIAN DIISI
 
 var numeral = __webpack_require__(/*! numeral */ "./node_modules/numeral/numeral.js");
@@ -401,7 +446,7 @@ var numeral = __webpack_require__(/*! numeral */ "./node_modules/numeral/numeral
       type: Boolean,
       required: true
     },
-    deleteData: {
+    printBelanja: {
       type: Function,
       require: true
     },
@@ -23094,7 +23139,7 @@ var render = function () {
         "b-card",
         [
           _c("div", { attrs: { slot: "header" }, slot: "header" }, [
-            _vm._v("\n      Pengguna\n      "),
+            _vm._v("\n            Pengguna\n            "),
             _c(
               "div",
               {
@@ -23186,7 +23231,7 @@ var render = function () {
             ? _c("app-datatable", {
                 attrs: {
                   editUrl: "/panel/master-data/pengguna/",
-                  deleteData: _vm.deleteRow,
+                  printBelanja: _vm.printBelanja,
                   isBusy: _vm.isBusy,
                   items: _vm.items,
                   fields: _vm.fields,
@@ -23401,6 +23446,48 @@ var render = function () {
                 return [
                   _vm._v(
                     "\n        " + _vm._s("Rp." + _vm.totalModal()) + "\n      "
+                  ),
+                ]
+              },
+            },
+            {
+              key: "actions",
+              fn: function (row) {
+                return [
+                  _c(
+                    "b-button",
+                    {
+                      staticClass: "ml-1",
+                      attrs: {
+                        title: "Kirim Email",
+                        variant: "primary",
+                        size: "sm",
+                      },
+                      on: {
+                        click: function ($event) {
+                          return _vm.printBelanja("email", row.item.id)
+                        },
+                      },
+                    },
+                    [_c("i", { staticClass: "icon-envelope" })]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "b-button",
+                    {
+                      staticClass: "ml-1",
+                      attrs: {
+                        title: "Cetak Struk",
+                        variant: "success",
+                        size: "sm",
+                      },
+                      on: {
+                        click: function ($event) {
+                          return _vm.printBelanja("print", row.item.id)
+                        },
+                      },
+                    },
+                    [_c("i", { staticClass: "icon-printer" })]
                   ),
                 ]
               },

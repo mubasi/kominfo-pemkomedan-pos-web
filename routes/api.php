@@ -63,6 +63,8 @@ Route::group(
          * transaksi
          */
         Route::post('/transaksi', [TransaksiController::class, 'store']);
+        Route::get('/transaksi/stuck/sendmail/{id}', [TransaksiController::class, 'sendEmail']);
+        Route::get('/transaksi/stuck/print/{id}', [TransaksiController::class, 'printStuck']);
         Route::get('/riwayat-transaksi', [TransaksiController::class, 'riwayatTransaksi']);
     }
 );
