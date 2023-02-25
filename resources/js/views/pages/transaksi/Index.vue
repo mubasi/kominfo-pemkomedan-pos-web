@@ -440,7 +440,7 @@ export default {
                         });
                     });
             } else {
-                self.$refs["md-finsih-transaction"].hide();
+                this.$refs["md-finsih-transaction"].hide();
                 this.$swal({
                     type: "Gagal kirim emai/cetak struk belanja",
                     title: "Silahkan lakukan kirim email/cetak struk di riwayat transaksi",
