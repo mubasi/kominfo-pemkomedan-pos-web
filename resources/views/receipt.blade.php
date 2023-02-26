@@ -99,8 +99,8 @@
         </table>
 
         <div style="text-align: center; margin-top 50px">
-            <span> Terimakasih telah berbelanja</span><br>
-            <span>Silahkan menikmati</span>
+            Terimakasih telah berbelanja<br>
+            Selamat menikmati
             <span>
                 <hr>
             </span>

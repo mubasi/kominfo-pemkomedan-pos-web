@@ -105,7 +105,7 @@
                         <span style="font-size=24px">
                             Terimakasih telah berbelanja
                             <br>
-                            Silahkan menikmati
+                            Selamat menikmati
                         </span>
                     </td>
                 </tr>
