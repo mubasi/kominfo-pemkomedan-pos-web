@@ -90,7 +90,6 @@ class TransaksiController extends Controller
             $to = request()->end_date;
             $posts->whereBetween('created_at', [$from, $to]);
         }
-
         $rows = $posts->paginate(request()->per_page);
         return response()->json(['status' => 'success', 'data' => $rows]);
     }

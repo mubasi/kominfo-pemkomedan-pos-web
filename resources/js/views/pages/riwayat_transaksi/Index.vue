@@ -2,9 +2,17 @@
     <div class="animated fadeIn">
         <b-card>
             <div slot="header">
-                Pengguna
+                Riwayat Transaksi
                 <div class="card-header-actions" style="height: 21px">
-                    <b-button variant="success" size="sm" @click="reloadPage">
+                    <download-excel
+                        class="btn btn-sm btn-success"
+                        :data="items"
+                        :fields="column_table"
+                        name="export-excel.xls"
+                    >
+                        Download Excel
+                    </download-excel>
+                    <b-button variant="primary" size="sm" @click="reloadPage">
                         <i class="fa fa-refresh" />
                     </b-button>
                     <!-- <router-link :to="'/panel/master-data/pengguna/add'" class="btn btn-sm btn-primary"><i
@@ -59,10 +67,13 @@ var numeral = require("numeral");
 import moment from "moment";
 import Datatable from "./TableInfo.vue"; //IMPORT COMPONENT DATATABLENYA
 import axios from "axios"; //IMPORT AXIOS
+
+import JsonExcel from "vue-json-excel";
 export default {
     name: "info",
     components: {
-        "app-datatable": Datatable, //REGISTER COMPONENT DATATABLE
+        "app-datatable": Datatable, //REGISTER COMPONENT DATATABLE,
+        downloadExcel: JsonExcel,
     },
     data: function () {
         return {
@@ -122,6 +133,48 @@ export default {
                     key: "actions",
                     label: "Actions",
                 }, //TAMBAHKAN CODE INI
+            ],
+            column_table: {
+                "Tanggal dan Waktu" : {
+                    field : "created_at",
+                    callback: (value) => {
+                        return this.formatDate(value);
+                    },
+                },
+                "Kode Transaksi" : "kode_transaksi",
+                "Nama" :  {
+                    field : "nama_pembeli",
+                    callback: (value) => {
+                        return value == null ? "-" : value;
+                    },
+                },
+                "No HP" : {
+                    field : "no_hp",
+                    callback: (value) => {
+                        return value == null ? "-" : value;
+                    },
+                },
+                "Total Modal" : {
+                    field : "total_modal",
+                    callback: (value) => {
+                        return this.formatRupiah(value, "Rp.");
+                    },
+                },
+                "Total Harga" : {
+                    field : "total_harga",
+                    callback: (value) => {
+                        return this.formatRupiah(value, "Rp.");
+                    },
+                },
+
+            },
+            json_meta: [
+                [
+                    {
+                        key: "charset",
+                        value: "utf-8",
+                    },
+                ],
             ],
             items: [], //DEFAULT VALUE DARI ITEMS ADALAH KOSONG
             meta: [], //JUGA BERLAKU UNTUK META
