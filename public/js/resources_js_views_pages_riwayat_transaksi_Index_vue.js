@@ -78,6 +78,49 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 var numeral = __webpack_require__(/*! numeral */ "./node_modules/numeral/numeral.js");
 
 
@@ -154,7 +197,7 @@ var numeral = __webpack_require__(/*! numeral */ "./node_modules/numeral/numeral
           }
         },
         "Kode Transaksi": "kode_transaksi",
-        "Nama": {
+        Nama: {
           field: "nama_pembeli",
           callback: function callback(value) {
             return value == null ? "-" : value;
@@ -197,9 +240,14 @@ var numeral = __webpack_require__(/*! numeral */ "./node_modules/numeral/numeral
       sortByDesc: false,
       //ASCEDING
       start_date: null,
+      day_select: null,
+      month_select: null,
       end_date: null,
       isBusy: false,
-      path: "/api/riwayat-transaksi"
+      dataRekapDay: null,
+      dataRekapMonth: null,
+      path: "/api/riwayat-transaksi",
+      path_rekap: "/api/rekap-transaksi"
     };
   },
   methods: {
@@ -211,6 +259,11 @@ var numeral = __webpack_require__(/*! numeral */ "./node_modules/numeral/numeral
     formatDate: function formatDate(value) {
       if (value) {
         return moment__WEBPACK_IMPORTED_MODULE_0___default()(String(value)).format("DD/MM/YYYY hh:mm");
+      }
+    },
+    formatDay: function formatDay(value) {
+      if (value) {
+        return moment__WEBPACK_IMPORTED_MODULE_0___default()(String(value)).format("DD/MM/YYYY");
       }
     },
     deleteRow: function deleteRow(id) {
@@ -335,6 +388,44 @@ var numeral = __webpack_require__(/*! numeral */ "./node_modules/numeral/numeral
         };
       });
     },
+    //METHOD INI AKAN MENGHANDLE REQUEST DATA KE API
+    loadGetDataRekap: function loadGetDataRekap(type) {
+      var _this6 = this;
+
+      this.isBusy = true;
+      axios__WEBPACK_IMPORTED_MODULE_2___default().get(this.path_rekap, {
+        //KIRIMKAN PARAMETER BERUPA PAGE YANG SEDANG DILOAD, PENCARIAN, LOAD PERPAGE DAN SORTING.
+        params: {
+          day: this.day_select,
+          month: this.month_select,
+          type: type
+        }
+      }).then(function (response) {
+        _this6.isBusy = false;
+        var getData = response.data.data;
+        var harga = getData.harga == null ? 0 : getData.harga;
+        var modal = getData.modal == null ? 0 : getData.modal;
+        var pendapatan = harga - modal;
+
+        if (type == "day") {
+          _this6.dataRekapDay = {
+            harga: harga,
+            modal: modal,
+            total: getData.total,
+            pendapatan: pendapatan
+          };
+        }
+
+        if (type == "month") {
+          _this6.dataRekapMonth = {
+            harga: harga,
+            modal: modal,
+            total: getData.total,
+            pendapatan: pendapatan
+          };
+        }
+      });
+    },
     //JIKA ADA EMIT TERKAIT LOAD PERPAGE, MAKA FUNGSI INI AKAN DIJALANKAN
     handlePerPage: function handlePerPage(val) {
       this.per_page = val; //SET PER_PAGE DENGAN VALUE YANG DIKIRIM DARI EMIT
@@ -363,9 +454,26 @@ var numeral = __webpack_require__(/*! numeral */ "./node_modules/numeral/numeral
     reloadPage: function reloadPage() {
       // alert('Hello');
       this.loadPostsData();
+    },
+    getDate: function getDate() {
+      var today = new Date();
+      var date = today.getFullYear() + '-' + this.formatUnderTen(today.getMonth() + 1) + '-' + this.formatUnderTen(today.getDate());
+      var monthDate = today.getFullYear() + '-' + this.formatUnderTen(today.getMonth() + 1);
+      this.day_select = date;
+      this.month_select = monthDate;
+    },
+    formatUnderTen: function formatUnderTen(number) {
+      return number < 10 ? "0" + number : number;
+    },
+    showDataRekap: function showDataRekap(type) {
+      this.loadGetDataRekap(type);
+    },
+    dialogRekap: function dialogRekap() {
+      this.$refs["dialogRekap"].show();
     }
   },
   mounted: function mounted() {
+    this.getDate();
     this.loadPostsData();
   }
 });
@@ -23881,6 +23989,19 @@ var render = function () {
                 _c(
                   "b-button",
                   {
+                    attrs: { variant: "warning", size: "sm" },
+                    on: { click: _vm.dialogRekap },
+                  },
+                  [
+                    _vm._v(
+                      "\n                    Rekap Transaksi\n                "
+                    ),
+                  ]
+                ),
+                _vm._v(" "),
+                _c(
+                  "b-button",
+                  {
                     attrs: { variant: "primary", size: "sm" },
                     on: { click: _vm.reloadPage },
                   },
@@ -23990,6 +24111,216 @@ var render = function () {
                 ],
                 1
               ),
+        ],
+        1
+      ),
+      _vm._v(" "),
+      _c(
+        "b-modal",
+        {
+          ref: "dialogRekap",
+          attrs: { size: "lg", "hide-footer": "", title: "Rekap Transaksi" },
+        },
+        [
+          _c(
+            "b-container",
+            [
+              _c(
+                "b-card",
+                { attrs: { "no-body": "" } },
+                [
+                  _c(
+                    "b-tabs",
+                    { attrs: { pills: "", card: "", vertical: "" } },
+                    [
+                      _c(
+                        "b-tab",
+                        { attrs: { title: "Hari Ini", active: "" } },
+                        [
+                          _c("b-card-text", [
+                            _vm._v(
+                              'Hari ini "' +
+                                _vm._s(_vm.formatDay(_vm.day_select)) +
+                                '"'
+                            ),
+                          ]),
+                          _vm._v(" "),
+                          _c("b-form-input", {
+                            attrs: { type: "date" },
+                            model: {
+                              value: _vm.day_select,
+                              callback: function ($$v) {
+                                _vm.day_select = $$v
+                              },
+                              expression: "day_select",
+                            },
+                          }),
+                          _vm._v(" "),
+                          _c(
+                            "b-button",
+                            {
+                              staticClass: "mt-1 mb-1",
+                              attrs: {
+                                type: "submit",
+                                variant: "primary",
+                                size: "sm",
+                              },
+                              on: {
+                                click: function ($event) {
+                                  return _vm.showDataRekap("day")
+                                },
+                              },
+                            },
+                            [_vm._v("Proses")]
+                          ),
+                          _vm._v(" "),
+                          _vm.dataRekapDay != null
+                            ? _c("table", { staticClass: "table" }, [
+                                _c("tr", [
+                                  _c("th", [_vm._v("Total Transaksi")]),
+                                  _vm._v(" "),
+                                  _c("th", [_vm._v("Total Penjualan")]),
+                                  _vm._v(" "),
+                                  _c("th", [_vm._v("Total Modal")]),
+                                  _vm._v(" "),
+                                  _c("th", [_vm._v("Total Pendapatan")]),
+                                ]),
+                                _vm._v(" "),
+                                _c("tr", [
+                                  _c("td", [
+                                    _vm._v(
+                                      "\n                                    " +
+                                        _vm._s(_vm.dataRekapDay.total) +
+                                        "\n                                "
+                                    ),
+                                  ]),
+                                  _vm._v(" "),
+                                  _c("td", [
+                                    _vm._v(
+                                      "\n                                    Rp. " +
+                                        _vm._s(_vm.dataRekapDay.harga) +
+                                        "\n                                "
+                                    ),
+                                  ]),
+                                  _vm._v(" "),
+                                  _c("td", [
+                                    _vm._v(
+                                      "\n                                    Rp. " +
+                                        _vm._s(_vm.dataRekapDay.modal) +
+                                        "\n                                "
+                                    ),
+                                  ]),
+                                  _vm._v(" "),
+                                  _c("td", [
+                                    _vm._v(
+                                      "\n                                    Rp. " +
+                                        _vm._s(_vm.dataRekapDay.pendapatan) +
+                                        "\n                                "
+                                    ),
+                                  ]),
+                                ]),
+                              ])
+                            : _vm._e(),
+                        ],
+                        1
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "b-tab",
+                        { attrs: { title: "Per Bulan" } },
+                        [
+                          _c("b-card-text", [
+                            _vm._v("Bulan " + _vm._s(_vm.month_select)),
+                          ]),
+                          _vm._v(" "),
+                          _c("b-form-input", {
+                            attrs: { type: "month" },
+                            model: {
+                              value: _vm.month_select,
+                              callback: function ($$v) {
+                                _vm.month_select = $$v
+                              },
+                              expression: "month_select",
+                            },
+                          }),
+                          _vm._v(" "),
+                          _c(
+                            "b-button",
+                            {
+                              staticClass: "mt-1",
+                              attrs: {
+                                type: "submit",
+                                variant: "primary",
+                                size: "sm",
+                              },
+                              on: {
+                                click: function ($event) {
+                                  return _vm.showDataRekap("month")
+                                },
+                              },
+                            },
+                            [_vm._v("Proses")]
+                          ),
+                          _vm._v(" "),
+                          _vm.dataRekapMonth != null
+                            ? _c("table", { staticClass: "table" }, [
+                                _c("tr", [
+                                  _c("th", [_vm._v("Total Transaksi")]),
+                                  _vm._v(" "),
+                                  _c("th", [_vm._v("Total Penjualan")]),
+                                  _vm._v(" "),
+                                  _c("th", [_vm._v("Total Modal")]),
+                                  _vm._v(" "),
+                                  _c("th", [_vm._v("Total Pendapatan")]),
+                                ]),
+                                _vm._v(" "),
+                                _c("tr", [
+                                  _c("td", [
+                                    _vm._v(
+                                      "\n                                    " +
+                                        _vm._s(_vm.dataRekapMonth.total) +
+                                        "\n                                "
+                                    ),
+                                  ]),
+                                  _vm._v(" "),
+                                  _c("td", [
+                                    _vm._v(
+                                      "\n                                    Rp. " +
+                                        _vm._s(_vm.dataRekapMonth.harga) +
+                                        "\n                                "
+                                    ),
+                                  ]),
+                                  _vm._v(" "),
+                                  _c("td", [
+                                    _vm._v(
+                                      "\n                                    Rp. " +
+                                        _vm._s(_vm.dataRekapMonth.modal) +
+                                        "\n                                "
+                                    ),
+                                  ]),
+                                  _vm._v(" "),
+                                  _c("td", [
+                                    _vm._v(
+                                      "\n                                    Rp. " +
+                                        _vm._s(_vm.dataRekapMonth.pendapatan) +
+                                        "\n                                "
+                                    ),
+                                  ]),
+                                ]),
+                              ])
+                            : _vm._e(),
+                        ],
+                        1
+                      ),
+                    ],
+                    1
+                  ),
+                ],
+                1
+              ),
+            ],
+            1
+          ),
         ],
         1
       ),

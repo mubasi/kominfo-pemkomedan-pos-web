@@ -94,6 +94,25 @@ class TransaksiController extends Controller
         return response()->json(['status' => 'success', 'data' => $rows]);
     }
 
+    public function rekapTransaksi()
+    {
+        $posts = Transaksi::select(array(DB::raw('sum(total_modal) as modal'), DB::raw('sum(total_harga) as harga'), DB::raw('count(*) as total')));
+
+        if(request()->type == "day") {
+            $posts->whereDate("created_at", request()->day);
+        }
+
+        if(request()->type == "month") {
+            $month = explode( '-', request()->month);
+            $posts->whereMonth("created_at", $month[1])
+                ->whereYear('created_at',$month[0]);
+        }
+        
+        $rows = $posts->first();
+        return response()->json(['status' => 'success', 'data' => $rows]);
+    }
+
+
     public function sendEmail($id)
     {
         try {

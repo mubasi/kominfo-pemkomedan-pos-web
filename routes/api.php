@@ -66,6 +66,7 @@ Route::group(
         Route::get('/transaksi/stuck/sendmail/{id}', [TransaksiController::class, 'sendEmail']);
         Route::get('/transaksi/stuck/print/{id}', [TransaksiController::class, 'printStuck']);
         Route::get('/riwayat-transaksi', [TransaksiController::class, 'riwayatTransaksi']);
+        Route::get('/rekap-transaksi', [TransaksiController::class, 'rekapTransaksi']);
     }
 );
 
